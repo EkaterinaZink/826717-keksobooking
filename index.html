@@ -16,7 +16,7 @@
     </div>
 
     <!-- Карта объявлений -->
-    <section class="map map--faded">
+    <section class="map">
 
       <!-- Метки объявлений -->
       <div class="map__pins">
@@ -32,6 +32,21 @@
             <ellipse cx="35" cy="35" rx="35" ry="35" fill="rgba(255, 86, 53, 0.7)" />
             <text><textPath xlink:href="#tophalf" startOffset="0">Поставь меня куда-нибудь</textPath></text>
           </svg>
+          <script>
+          var myPin = document.getElementbyId("offerInformation");
+          var locationX = document.getElementsByName("offerInformatio.Location.x");
+          var locationY = document.getElementsByName("offerInformatio.Location.y");
+          </script>
+          <button class="map__pin" style="left: locationX px; top: locationY px;">
+            <img src="img/muffin-red.svg" width="40" height="44" draggable="false" alt="Метка объявления">
+            <svg viewBox="0 0 70 70" width="156" height="156" aria-label="Метка для поиска жилья">
+              <defs>
+                <path d="M35,35m-23,0a23,23 0 1,1 46,0a23,23 0 1,1 -46,0" id="tophalf" />
+              </defs>
+              <ellipse cx="35" cy="35" rx="35" ry="35" fill="rgba(255, 86, 53, 0.7)" />
+              <text><textPath xlink:href="#tophalf" startOffset="0">Поставь меня куда-нибудь</textPath></text>
+            </svg>
+
         </button>
       </div>
 
