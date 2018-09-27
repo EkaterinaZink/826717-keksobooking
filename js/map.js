@@ -20,7 +20,7 @@ var offerInformation = []
 
 function getBooking (array) {
   author = {
-    avatar: "user(getAvatar).png", //где {{xx}} это число от 1 до 8 с ведущим нулём. Например, 01, 02 и т. д. Адреса изображений не повторяются
+    avatar: "img/avatars/user.(getAvatar).png", //где {{xx}} это число от 1 до 8 с ведущим нулём. Например, 01, 02 и т. д. Адреса изображений не повторяются
   },
 
   offer = {
