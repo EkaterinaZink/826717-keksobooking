@@ -1,0 +1,80 @@
+[1mdiff --git a/js/map.js b/js/map.js[m
+[1mindex 7211fbc..9106259 100644[m
+[1m--- a/js/map.js[m
+[1m+++ b/js/map.js[m
+[36m@@ -15,7 +15,9 @@[m [mvar housesTypes = {[m
+ };[m
+ var avatars = [];[m
+ var offerInformation = [];[m
+[31m-[m
+[32m+[m[32mvar fieldsLock = document.querySelectorAll('.fieldset');[m
+[32m+[m[32mvar pinSize = document.querySelector('.map__pin--main').getBoundingClientRect();[m
+[32m+[m[32mvar pinAdress = document.querySelector('#address');[m
+ var getRandomInt = function (min, max) {[m
+   return Math.floor(Math.random() * (max - min + 1)) + min;[m
+ };[m
+[36m@@ -35,9 +37,6 @@[m [mvar generateAvatars = function () {[m
+   }[m
+ };[m
+ [m
+[31m-var unlockScreen = function () {[m
+[31m-  document.querySelector('.map--faded').classList.remove('map--faded');[m
+[31m-};[m
+ var myPin = document.querySelector('#card').cloneNode(true);[m
+ document.querySelector('.map__pin').appendChild(myPin);[m
+ [m
+[36m@@ -46,7 +45,7 @@[m [mvar getBooking = function () {[m
+   var randomPrice = getRandomInt(1000, 1000000);[m
+   var randomGuests = getRandomInt(1, 10);[m
+   var randomRooms = getRandomInt(1, 5);[m
+[31m-  var randomTitle = itemTitle[getRandomInt(0, itemTitle.length)];[m
+[32m+[m[32m  var randomTitle = itemTitle[getRandomInt(0, itemTitle.length - 1)];[m
+   var randomType = itemType[getRandomInt(0, 2)];[m
+   var randomCheckin = timeCheck[getRandomInt(0, 2)];[m
+   var randomCheckout = timeCheck[getRandomInt(0, 2)];[m
+[36m@@ -130,11 +129,42 @@[m [mvar renderCard = function (data) {[m
+   document.querySelector('.map').insertBefore(cardTemplate, document.querySelector('.map__filters-container'));[m
+ };[m
+ [m
+[31m-var start = function () {[m
+[32m+[m
+[32m+[m[32m// отключение полей[m
+[32m+[m[32mfieldsLock.forEach(function (field) {[m
+[32m+[m[32m  field.disabled = true;[m
+[32m+[m[32m});[m
+[32m+[m
+[32m+[m[32m// снять неактивное состояние[m
+[32m+[m[32mvar unlockScreen = function () {[m
+[32m+[m[32m  document.querySelector('.map--faded').classList.remove('map--faded');[m
+[32m+[m[32m  document.querySelector('.ad-form--disabled').classList.remove('ad-form--disabled');[m
+[32m+[m[32m  fieldsLock.forEach(function (field) {[m
+[32m+[m[32m    field.disabled = false;[m
+[32m+[m[32m  });[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32mdocument.querySelector('.map__pin--main').addEventListener('mouseup', function () {[m
+   unlockScreen();[m
+   generateMockData();[m
+   renderPins();[m
+   renderCard(offerInformation[0]);[m
+[31m-};[m
+[32m+[m[32m  pinAdress.value = Math.round(pinSize.left) + ', ' + Math.round(pinSize.top);[m
+[32m+[m[32m});[m
+ [m
+[31m-start();[m
+[32m+[m[32m// start();[m
+[32m+[m
+[32m+[m[32m/* var unlockScreen = function () {[m
+[32m+[m[32mdocument.addEventListener('.map__pin--main', function () {[m
+[32m+[m[32m};[m
+[32m+[m[32mdocument.getElementById("myFieldset").disabled = true; - отключить поля[m
+[32m+[m[32mmouseup .map__pin--main[m
+[32m+[m[32m- добавление события[m
+[32m+[m[32maddEventListener("click", function(event) {[m
+[32m+[m[32m    var dot = document.createElement("div");[m
+[32m+[m[32m    dot.className = "dot";[m
+[32m+[m[32m    dot.style.left = (event.pageX - 4) + "px";[m
+[32m+[m[32m    dot.style.top = (event.pageY - 4) + "px";[m
+[32m+[m[32m    document.body.appendChild(dot);[m
+[32m+[m[32m  });[m
+[32m+[m[32m*/[m

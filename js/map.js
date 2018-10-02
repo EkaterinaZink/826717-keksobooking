@@ -15,7 +15,9 @@ var housesTypes = {
 };
 var avatars = [];
 var offerInformation = [];
-
+var fieldsLock = document.querySelectorAll('.fieldset');
+var pinSize = document.querySelector('.map__pin--main').getBoundingClientRect();
+var pinAdress = document.querySelector('#address');
 var getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
@@ -35,12 +37,8 @@ var generateAvatars = function () {
   }
 };
 
-var unlockScreen = function () {
-  document.querySelector('.map--faded').classList.remove('map--faded');
-};
 var myPin = document.querySelector('#card').cloneNode(true);
 document.querySelector('.map__pin').appendChild(myPin);
-
 
 var getBooking = function () {
   var randomPrice = getRandomInt(1000, 1000000);
@@ -130,6 +128,36 @@ var renderCard = function (data) {
   document.querySelector('.map').insertBefore(cardTemplate, document.querySelector('.map__filters-container'));
 };
 
+// отключение полей
+fieldsLock.forEach(function (field) {
+  field.disabled = true;
+});
+
+// снять неактивное состояние
+var unlockScreen = function () {
+  document.querySelector('.map--faded').classList.remove('map--faded');
+  document.querySelector('.ad-form--disabled').classList.remove('ad-form--disabled');
+  fieldsLock.forEach(function (field) {
+    field.disabled = false;
+  });
+};
+
+document.querySelector('.map__pin--main').addEventListener('mouseup', function () {
+  unlockScreen();
+  generateMockData();
+  renderPins();
+  renderCard(offerInformation[0]);
+  pinAdress.value = Math.round(pinSize.left) + ', ' + Math.round(pinSize.top);
+});
+
+// start();
+
+/*
+var unlockScreen = function () {
+  document.querySelector('.map--faded').classList.remove('map--faded');
+};
+var myPin = document.querySelector('#card').cloneNode(true);
+document.querySelector('.map__pin').appendChild(myPin);
 var start = function () {
   unlockScreen();
   generateMockData();
@@ -138,3 +166,5 @@ var start = function () {
 };
 
 start();
+*/
+
