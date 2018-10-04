@@ -15,6 +15,20 @@ var housesTypes = {
 };
 var avatars = [];
 var offerInformation = [];
+var fieldsLock = document.querySelectorAll('.ad-form__element');
+var pinSize = document.querySelector('.map__pin--main').getBoundingClientRect();
+var pinAdress = document.querySelector('#address');
+// var cardData = document.querySelector('#card');
+var mapItem = document.querySelector('.map');
+var popup;
+var cardClose;
+// var cardOpen;
+
+// отключение полей
+fieldsLock.forEach(function (field) {
+  field.setAttribute('disabled', 'disabled');
+  return false;
+});
 
 var getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -35,12 +49,8 @@ var generateAvatars = function () {
   }
 };
 
-var unlockScreen = function () {
-  document.querySelector('.map--faded').classList.remove('map--faded');
-};
 var myPin = document.querySelector('#card').cloneNode(true);
 document.querySelector('.map__pin').appendChild(myPin);
-
 
 var getBooking = function () {
   var randomPrice = getRandomInt(1000, 1000000);
@@ -85,6 +95,7 @@ var generateMockData = function () {
     offerInformation.push(getBooking());
   }
 };
+generateMockData();
 
 var renderPins = function () {
   var fragment = document.createDocumentFragment();
@@ -95,6 +106,12 @@ var renderPins = function () {
     pin.querySelector('.map__pin').style.top = item.location.y + 'px';
     pin.querySelector('img').src = item.author.avatar;
     pin.querySelector('img').alt = item.offer.title;
+    pin.addEventListener('click', function () {
+      renderCard(item);
+    });
+    pin.querySelector('.map__pin').addEventListener('click', function () {
+      renderCard(item);
+    });
     fragment.appendChild(pin);
   });
   document.querySelector('.map__pins').appendChild(fragment);
@@ -103,6 +120,8 @@ var renderPins = function () {
 var renderCard = function (data) {
   // var fragment = document.createDocumentFragment();
   var cardTemplate = document.querySelector('#card').cloneNode(true).content;
+  // cardOpen = cardTemplate.querySelector('.map__card popup');
+  cardClose = cardTemplate.querySelector('.popup__close');
   cardTemplate.querySelector('.popup__title').textContent = data.offer.title;
   cardTemplate.querySelector('.popup__text--address').textContent = data.offer.address;
   cardTemplate.querySelector('.popup__text--price').textContent = data.offer.price + '₽/ночь';
@@ -127,9 +146,98 @@ var renderCard = function (data) {
     var featuresItem = features.querySelector('.popup__feature--' + item).cloneNode(true);
     featuresElement.appendChild(featuresItem);
   });
-  document.querySelector('.map').insertBefore(cardTemplate, document.querySelector('.map__filters-container'));
+
+  popup = cardTemplate;
+  mapItem.insertBefore(cardTemplate, document.querySelector('.map__filters-container'));
+  cardClose.addEventListener('click', onCardCloseClick(data));
+  // cardClose.addEventListener('keydown', onCardPressEnter(data));
+  // document.addEventListener('keydown', onCardPressEsc(data));
+  return cardTemplate;
 };
 
+// удаление объявления из DOMа
+var closeCard = function (data) {
+  if (popup) {
+    document.querySelector('.popup').remove();
+  }
+  if (data) {
+    data.classList.remove('map__pin--active');
+  }
+};
+
+// при нажатии клика на закрытие
+var onCardCloseClick = function (data) {
+  return function () {
+    closeCard(data);
+  };
+};
+
+// при нажатии на пин
+//  document.querySelectorAll('')
+
+// снять неактивное состояние
+var unlockScreen = function () {
+  document.querySelector('.map--faded').classList.remove('map--faded');
+  document.querySelector('.ad-form--disabled').classList.remove('ad-form--disabled');
+  fieldsLock.forEach(function (field) {
+    field.disabled = false;
+  });
+};
+
+document.querySelector('.map__pin--main').addEventListener('mouseup', function () {
+  unlockScreen();
+  renderPins();
+  // renderCard(offerInformation[0]);
+  pinAdress.value = Math.round(pinSize.left) + ', ' + Math.round(pinSize.top);
+});
+
+
+/*
+// отрисовка похожего объявления
+var renderCardElement = function (data) {
+  renderCard();
+  var newFragment = document.createDocumentFragment();
+  newFragment.appendChild(renderCard(data));
+  mapItem.insertBefore(newFragment, document.querySelector('.map__filters-container'));
+};
+
+    //mapItem.removeChild(popup);
+    //popup = null;
+    //cardClose = null;
+    //document.removeEventListener('keydown', onCardPressEsc);
+
+// при нажатии Enter
+var onCardPressEnter = function (data) {
+  return function (event) {
+    window.utils.isEnterEvent(event, closeCard, data);
+  };
+};
+
+
+// при нажатии Esc
+var onCardPressEsc = function (data) {
+  return function (event) {
+    window.utils.isEscEvent(event, closeCard, data);
+  };
+};
+
+// start();
+
+/*
+
+
+// отрисовка объявления
+var renderPopup = function (data) {
+  closeCard(data);
+  renderCardElement(data);
+  data.classList.add('map__pin--active');
+};
+
+var unlockScreen = function () {
+  document.querySelector('.map--faded').classList.remove('map--faded');
+};
+var myPin = document.querySelector('#card').cloneNode(true);
+document.querySelector('.map__pin').appendChild(myPin);
 var start = function () {
   unlockScreen();
   generateMockData();
@@ -138,3 +246,5 @@ var start = function () {
 };
 
 start();
+*/
+
