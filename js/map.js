@@ -18,11 +18,11 @@ var offerInformation = [];
 var fieldsLock = document.querySelectorAll('.ad-form__element');
 var pinSize = document.querySelector('.map__pin--main').getBoundingClientRect();
 var pinAdress = document.querySelector('#address');
-//var cardData = document.querySelector('#card');
+// var cardData = document.querySelector('#card');
 var mapItem = document.querySelector('.map');
 var popup;
 var cardClose;
-var cardOpen;
+// var cardOpen;
 
 // отключение полей
 fieldsLock.forEach(function (field) {
@@ -120,8 +120,8 @@ var renderPins = function () {
 var renderCard = function (data) {
   // var fragment = document.createDocumentFragment();
   var cardTemplate = document.querySelector('#card').cloneNode(true).content;
+  // cardOpen = cardTemplate.querySelector('.map__card popup');
   cardClose = cardTemplate.querySelector('.popup__close');
-  cardOpen = cardTemplate.querySelector('.map__card popup');
   cardTemplate.querySelector('.popup__title').textContent = data.offer.title;
   cardTemplate.querySelector('.popup__text--address').textContent = data.offer.address;
   cardTemplate.querySelector('.popup__text--price').textContent = data.offer.price + '₽/ночь';
@@ -150,8 +150,8 @@ var renderCard = function (data) {
   popup = cardTemplate;
   mapItem.insertBefore(cardTemplate, document.querySelector('.map__filters-container'));
   cardClose.addEventListener('click', onCardCloseClick(data));
-  //cardClose.addEventListener('keydown', onCardPressEnter(data));
-  //document.addEventListener('keydown', onCardPressEsc(data));
+  // cardClose.addEventListener('keydown', onCardPressEnter(data));
+  // document.addEventListener('keydown', onCardPressEsc(data));
   return cardTemplate;
 };
 
@@ -173,8 +173,7 @@ var onCardCloseClick = function (data) {
 };
 
 // при нажатии на пин
-//document.querySelectorAll('')
-
+//  document.querySelectorAll('')
 
 // снять неактивное состояние
 var unlockScreen = function () {
@@ -188,15 +187,12 @@ var unlockScreen = function () {
 document.querySelector('.map__pin--main').addEventListener('mouseup', function () {
   unlockScreen();
   renderPins();
-  //renderCard(offerInformation[0]);
+  // renderCard(offerInformation[0]);
   pinAdress.value = Math.round(pinSize.left) + ', ' + Math.round(pinSize.top);
 });
 
 
 /*
-
-
-
 // отрисовка похожего объявления
 var renderCardElement = function (data) {
   renderCard();
@@ -224,9 +220,6 @@ var onCardPressEsc = function (data) {
     window.utils.isEscEvent(event, closeCard, data);
   };
 };
-
-
-
 
 // start();
 
