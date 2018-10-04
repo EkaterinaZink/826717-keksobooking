@@ -15,13 +15,21 @@ var housesTypes = {
 };
 var avatars = [];
 var offerInformation = [];
-var fieldsLock = document.querySelectorAll('.fieldset');
+var fieldsLock = document.querySelectorAll('.ad-form__element');
 var pinSize = document.querySelector('.map__pin--main').getBoundingClientRect();
 var pinAdress = document.querySelector('#address');
-var cardData = document.querySelector('#card');
+//var cardData = document.querySelector('#card');
 var mapItem = document.querySelector('.map');
 var popup;
 var cardClose;
+var cardOpen;
+
+// отключение полей
+fieldsLock.forEach(function (field) {
+  field.setAttribute('disabled', 'disabled');
+  return false;
+});
+
 var getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
@@ -98,15 +106,22 @@ var renderPins = function () {
     pin.querySelector('.map__pin').style.top = item.location.y + 'px';
     pin.querySelector('img').src = item.author.avatar;
     pin.querySelector('img').alt = item.offer.title;
+    pin.addEventListener('click', function () {
+      renderCard(item);
+    });
+    pin.querySelector('.map__pin').addEventListener('click', function () {
+      renderCard(item);
+    });
     fragment.appendChild(pin);
   });
   document.querySelector('.map__pins').appendChild(fragment);
 };
 
-var renderCard = function (data, pinData) {
+var renderCard = function (data) {
   // var fragment = document.createDocumentFragment();
   var cardTemplate = document.querySelector('#card').cloneNode(true).content;
   cardClose = cardTemplate.querySelector('.popup__close');
+  cardOpen = cardTemplate.querySelector('.map__card popup');
   cardTemplate.querySelector('.popup__title').textContent = data.offer.title;
   cardTemplate.querySelector('.popup__text--address').textContent = data.offer.address;
   cardTemplate.querySelector('.popup__text--price').textContent = data.offer.price + '₽/ночь';
@@ -134,66 +149,31 @@ var renderCard = function (data, pinData) {
 
   popup = cardTemplate;
   mapItem.insertBefore(cardTemplate, document.querySelector('.map__filters-container'));
-  cardClose.addEventListener('click', onCardCloseClick(pinData));
-  cardClose.addEventListener('keydown', onCardPressEnter(pinData));
-  document.addEventListener('keydown', onCardPressEsc(pinData));
+  cardClose.addEventListener('click', onCardCloseClick(data));
+  //cardClose.addEventListener('keydown', onCardPressEnter(data));
+  //document.addEventListener('keydown', onCardPressEsc(data));
   return cardTemplate;
 };
 
-// отрисовка похожего объявления
-var renderCardElement = function (data, pinData) {
-  var newFragment = document.createDocumentFragment();
-  newFragment.appendChild(renderCard(data, pinData));
-  mapItem.insertBefore(newFragment, document.querySelector('.map__filters-container'));
-};
-
-// отрисовка объявления
-var renderPopup = function (data, pinData) {
-  closeCard(pinData);
-  renderCardElement(data, pinData);
-  pinData.classList.add('map__pin--active');
-};
-
 // удаление объявления из DOMа
-
-
-var closeCard = function (pinData) {
+var closeCard = function (data) {
   if (popup) {
-    mapItem.removeChild(popup);
-    popup = null;
-    cardClose = null;
-    document.removeEventListener('keydown', onCardPressEsc);
+    document.querySelector('.popup').remove();
   }
-  if (pinData) {
-    pinData.classList.remove('map__pin--active');
+  if (data) {
+    data.classList.remove('map__pin--active');
   }
-};
-
-// при нажатии Enter
-var onCardPressEnter = function (pinData) {
-  return function (event) {
-    window.utils.isEnterEvent(event, closeCard, pinData);
-  };
 };
 
 // при нажатии клика на закрытие
-var onCardCloseClick = function (pinData) {
+var onCardCloseClick = function (data) {
   return function () {
-    closeCard(pinData);
+    closeCard(data);
   };
 };
 
-// при нажатии Esc
-var onCardPressEsc = function (pinData) {
-  return function (event) {
-    window.utils.isEscEvent(event, closeCard, pinData);
-  };
-};
-
-// отключение полей
-fieldsLock.forEach(function (field) {
-  field.disabled = false;
-});
+// при нажатии на пин
+//document.querySelectorAll('')
 
 
 // снять неактивное состояние
@@ -208,13 +188,58 @@ var unlockScreen = function () {
 document.querySelector('.map__pin--main').addEventListener('mouseup', function () {
   unlockScreen();
   renderPins();
-  renderCard(offerInformation[0]);
+  //renderCard(offerInformation[0]);
   pinAdress.value = Math.round(pinSize.left) + ', ' + Math.round(pinSize.top);
 });
+
+
+/*
+
+
+
+// отрисовка похожего объявления
+var renderCardElement = function (data) {
+  renderCard();
+  var newFragment = document.createDocumentFragment();
+  newFragment.appendChild(renderCard(data));
+  mapItem.insertBefore(newFragment, document.querySelector('.map__filters-container'));
+};
+
+    //mapItem.removeChild(popup);
+    //popup = null;
+    //cardClose = null;
+    //document.removeEventListener('keydown', onCardPressEsc);
+
+// при нажатии Enter
+var onCardPressEnter = function (data) {
+  return function (event) {
+    window.utils.isEnterEvent(event, closeCard, data);
+  };
+};
+
+
+// при нажатии Esc
+var onCardPressEsc = function (data) {
+  return function (event) {
+    window.utils.isEscEvent(event, closeCard, data);
+  };
+};
+
+
+
 
 // start();
 
 /*
+
+
+// отрисовка объявления
+var renderPopup = function (data) {
+  closeCard(data);
+  renderCardElement(data);
+  data.classList.add('map__pin--active');
+};
+
 var unlockScreen = function () {
   document.querySelector('.map--faded').classList.remove('map--faded');
 };
