@@ -18,12 +18,28 @@ var offerInformation = [];
 var fieldsLock = document.querySelectorAll('.ad-form__element');
 var pinSize = document.querySelector('.map__pin--main').getBoundingClientRect();
 var pinAdress = document.querySelector('#address');
-// var cardData = document.querySelector('#card');
 var mapItem = document.querySelector('.map');
 var popup;
 var cardClose;
-// var cardOpen;
+var addRooms = document.querySelector('#room_number');
+var addCapacity = document.querySelector('#capacity');
+var addType = document.querySelector('#type');
+var addPrice = document.querySelector('#price');
+var addCheckIn = document.querySelector('#timein');
+var addCheckOut = document.querySelector('#timeout');
 
+var countRoomsGuests = {
+  '1': ['1'],
+  '2': ['1', '2'],
+  '3': ['1', '2', '3'],
+  '100': ['0']
+};
+var homeType = {
+  'bungalo': 0,
+  'flat': 1000,
+  'house': 5000,
+  'palace': 10000,
+};
 // отключение полей
 fieldsLock.forEach(function (field) {
   field.setAttribute('disabled', 'disabled');
@@ -118,9 +134,7 @@ var renderPins = function () {
 };
 
 var renderCard = function (data) {
-  // var fragment = document.createDocumentFragment();
   var cardTemplate = document.querySelector('#card').cloneNode(true).content;
-  // cardOpen = cardTemplate.querySelector('.map__card popup');
   cardClose = cardTemplate.querySelector('.popup__close');
   cardTemplate.querySelector('.popup__title').textContent = data.offer.title;
   cardTemplate.querySelector('.popup__text--address').textContent = data.offer.address;
@@ -135,7 +149,6 @@ var renderCard = function (data) {
     var photo = getPhoto.cloneNode(true);
     photo.src = item;
     cardTemplate.querySelector('.popup__photos').appendChild(photo);
-    // getPhoto.appendChild(photo);
   });
   cardTemplate.querySelector('.popup__photos img:nth-child(1)').remove();
   cardTemplate.querySelector('.popup__avatar').src = data.author.avatar;
@@ -150,8 +163,6 @@ var renderCard = function (data) {
   popup = cardTemplate;
   mapItem.insertBefore(cardTemplate, document.querySelector('.map__filters-container'));
   cardClose.addEventListener('click', onCardCloseClick(data));
-  // cardClose.addEventListener('keydown', onCardPressEnter(data));
-  // document.addEventListener('keydown', onCardPressEsc(data));
   return cardTemplate;
 };
 
@@ -173,7 +184,36 @@ var onCardCloseClick = function (data) {
 };
 
 // при нажатии на пин
-//  document.querySelectorAll('')
+document.querySelector('.map__pin--main').addEventListener('mouseup', function () {
+  unlockScreen();
+  renderPins();
+  pinAdress.value = Math.round(pinSize.left) + ', ' + Math.round(pinSize.top);
+});
+
+// установка соответствия количества гостей количеству комнат
+var getRooms = function () {
+  var rooms = addRooms.value;
+  var capacity = addCapacity.value;
+  var message = (countRoomsGuests[rooms].indexOf(capacity) === -1) ? 'Количество гостей не соответствует количеству комнат' : '';
+  addCapacity.setCustomValidity(message);
+};
+
+// изменение типа жилья в зависимости от цены
+var changeType = function () {
+  var minPrice = homeType[addType.value];
+  addPrice.placeholder = minPrice;
+  addPrice.min = minPrice;
+};
+
+// изменение время заезда
+var changeCheckIn = function () {
+  addCheckOut.value = addCheckIn.value;
+};
+
+// изменение время выезда
+var changeCheckOut = function () {
+  addCheckIn.value = addCheckOut.value;
+};
 
 // снять неактивное состояние
 var unlockScreen = function () {
@@ -182,69 +222,9 @@ var unlockScreen = function () {
   fieldsLock.forEach(function (field) {
     field.disabled = false;
   });
+  addType.addEventListener('change', changeType);
+  addCheckIn.addEventListener('change', changeCheckIn);
+  addCheckOut.addEventListener('change', changeCheckOut);
+  addRooms.addEventListener('change', getRooms);
+  addCapacity.addEventListener('change', getRooms);
 };
-
-document.querySelector('.map__pin--main').addEventListener('mouseup', function () {
-  unlockScreen();
-  renderPins();
-  // renderCard(offerInformation[0]);
-  pinAdress.value = Math.round(pinSize.left) + ', ' + Math.round(pinSize.top);
-});
-
-
-/*
-// отрисовка похожего объявления
-var renderCardElement = function (data) {
-  renderCard();
-  var newFragment = document.createDocumentFragment();
-  newFragment.appendChild(renderCard(data));
-  mapItem.insertBefore(newFragment, document.querySelector('.map__filters-container'));
-};
-
-    //mapItem.removeChild(popup);
-    //popup = null;
-    //cardClose = null;
-    //document.removeEventListener('keydown', onCardPressEsc);
-
-// при нажатии Enter
-var onCardPressEnter = function (data) {
-  return function (event) {
-    window.utils.isEnterEvent(event, closeCard, data);
-  };
-};
-
-
-// при нажатии Esc
-var onCardPressEsc = function (data) {
-  return function (event) {
-    window.utils.isEscEvent(event, closeCard, data);
-  };
-};
-
-// start();
-
-/*
-
-
-// отрисовка объявления
-var renderPopup = function (data) {
-  closeCard(data);
-  renderCardElement(data);
-  data.classList.add('map__pin--active');
-};
-
-var unlockScreen = function () {
-  document.querySelector('.map--faded').classList.remove('map--faded');
-};
-var myPin = document.querySelector('#card').cloneNode(true);
-document.querySelector('.map__pin').appendChild(myPin);
-var start = function () {
-  unlockScreen();
-  generateMockData();
-  renderPins();
-  renderCard(offerInformation[0]);
-};
-
-start();
-*/
-
