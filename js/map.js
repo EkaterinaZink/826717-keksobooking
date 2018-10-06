@@ -21,7 +21,9 @@ var pinAdress = document.querySelector('#address');
 var mapItem = document.querySelector('.map');
 var popup;
 var cardClose;
-var mainPin = document.querySelector('.map__pin--main')
+var mainPin = document.querySelector('.map__pin--main');
+var mapPins = document.querySelector('.map__pins');
+var mapPin = document.querySelector('.map__pin');
 var addRooms = document.querySelector('#room_number');
 var addCapacity = document.querySelector('#capacity');
 var addType = document.querySelector('#type');
@@ -44,9 +46,9 @@ var homeType = {
 
 var pinMoveLimits = {
   xMin: 0,
-  yMin: screenY,
-  xMax: containerWidth,
-  yMax: screenY
+  yMin: 130,
+  xMax: mapPins.offsetWidth - mapPin.offsetWidth,
+  yMax: 630
 };
 
 // отключение полей
@@ -192,13 +194,6 @@ var onCardCloseClick = function (data) {
   };
 };
 
-// при нажатии на пин
-document.querySelector('.map__pin--main').addEventListener('mouseup', function (evt) {
-  unlockScreen(evt);
-  renderPins();
-  pinAdress.value = Math.round(pinSize.left) + ', ' + Math.round(pinSize.top);
-});
-
 // установка соответствия количества гостей количеству комнат
 var getRooms = function () {
   var rooms = addRooms.value;
@@ -224,61 +219,81 @@ var changeCheckOut = function () {
   addCheckIn.value = addCheckOut.value;
 };
 
-// снять неактивное состояние
-var unlockScreen = function (evt) {
+// число в диапазоне
+var getRadomValue = function (value, min, max) {
+  if (value < min) {
+    value = min;
+  }
+  if (value > max) {
+    value = max;
+  }
+  return value;
+};
+
+// координаты в пределах экрана
+var getNewCoord = function (coordinateX, coordinateY, screenLimit) {
+  console.log(coordinateX, coordinateY, screenLimit);
+  var coordinates = {
+    x: getRadomValue(coordinateX, screenLimit.xMin, screenLimit.xMax),
+    y: getRadomValue(coordinateY, screenLimit.yMin, screenLimit.yMax)
+  };
+  return coordinates;
+};
+
+// при клике на мышку
+var onMouseDown = function (evt) {
   var startPoint = {
     x: evt.clientX,
     y: evt.clientY
   };
-
-  // число в диапазоне
-  var getRadomValue = function (value, min, max) {
-    var randomValue = (value < min) ? min : max;
-    return randomValue;
-  };
-
   // перемещение мышки
   var onMouseMove = function (evtMove) {
-    var move = {
+    /*var move = {
       x: startPoint.x - evtMove.clientX,
       y: startPoint.y - evtMove.clientY
+    };*/
+    var move = {
+      x: event.clientX,
+      y: event.clientY
     };
-
     startPoint = {
       x: evtMove.clientX,
       y: evtMove.clientY
     };
-    var newCoord = getNewCoord(mainPin.offsetLeft - move.x, mainPin.offsetTop - move.y, pinMoveLimits);
+    //var newCoord = getNewCoord(mainPin.offsetLeft - move.x, mainPin.offsetTop - move.y, pinMoveLimits);
+    //var newCoord = getNewCoord(move.x, move.y, pinMoveLimits);
+    console.log (newCoord);
     mainPin.style.left = newCoord.x + 'px';
     mainPin.style.top = newCoord.y + 'px';
   };
-
-  // координаты в пределах экрана
-  var getNewCoord = function (coordinateX, coordinateY, screenLimit) {
-    var coordinates = {
-      x: getRadomValue(coordinateX, screenLimit.xMin, screenLimit.xMax),
-      y: getRadomValue(coordinateY, screenLimit.yMin, screenLimit.yMax)
-    };
-    return coordinates;
-  };
-
   // отпускание мышки
   var onMouseUp = function () {
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
   };
+  pinAdress.value = Math.round(pinSize.left) + ', ' + Math.round(pinSize.top);
+  document.addEventListener('mousedown', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+};
 
+mainPin.addEventListener('mousedown', onMouseDown);
+
+// разблокировка экрана
+var unlockScreen = function () {
   document.querySelector('.map--faded').classList.remove('map--faded');
   document.querySelector('.ad-form--disabled').classList.remove('ad-form--disabled');
   fieldsLock.forEach(function (field) {
     field.disabled = false;
   });
-  document.addEventListener('mousemove', onMouseMove);
-  document.addEventListener('mouseup', onMouseUp);
-  // document.addEventListener('mousedown', unlockScreen);
   addType.addEventListener('change', changeType);
   addCheckIn.addEventListener('change', changeCheckIn);
   addCheckOut.addEventListener('change', changeCheckOut);
   addRooms.addEventListener('change', getRooms);
   addCapacity.addEventListener('change', getRooms);
 };
+
+// функция вызывающаяся после отпускание мышки
+document.querySelector('.map__pin--main').addEventListener('mouseup', function () {
+  unlockScreen();
+  renderPins();
+});
