@@ -21,6 +21,7 @@ var pinAdress = document.querySelector('#address');
 var mapItem = document.querySelector('.map');
 var popup;
 var cardClose;
+// var mainPin = document.querySelector('.map__pin--main')
 var addRooms = document.querySelector('#room_number');
 var addCapacity = document.querySelector('#capacity');
 var addType = document.querySelector('#type');
@@ -40,6 +41,48 @@ var homeType = {
   'house': 5000,
   'palace': 10000,
 };
+
+/*
+var pinMoveLimits = {
+  xMin: 0,
+  yMin: screenY,
+  xMax: containerWidth,
+  yMax: screenY
+};
+
+var onMouseDown = function (evt) {
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  }
+};
+
+var onMouseMove = function (evtMove){
+  var startPoint = {
+    x: evtMove.clientX,
+    y: evtMove.clientY
+  }
+  var move = {
+    x: startPoint.x - evtMove.clientX,
+    y: startPoint.y - evtMove.clientY
+  }
+};
+
+var getNewCoord = function (pinMoveLimits){
+mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+}
+
+var onMouseUp = function (){
+  document.removeEventListener('mousemove', onMouseMove);
+  document.removeEventListener('mouseup', onMouseUp);
+};
+
+  };
+
+*/
+
 // отключение полей
 fieldsLock.forEach(function (field) {
   field.setAttribute('disabled', 'disabled');
@@ -222,6 +265,9 @@ var unlockScreen = function () {
   fieldsLock.forEach(function (field) {
     field.disabled = false;
   });
+  // document.addEventListener('mousemove', onMouseMove);
+  // document.addEventListener('mouseup', onMouseUp);
+  // document.addEventListener('mousedown', onMouseDown);
   addType.addEventListener('change', changeType);
   addCheckIn.addEventListener('change', changeCheckIn);
   addCheckOut.addEventListener('change', changeCheckOut);
