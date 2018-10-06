@@ -21,7 +21,7 @@ var pinAdress = document.querySelector('#address');
 var mapItem = document.querySelector('.map');
 var popup;
 var cardClose;
-// var mainPin = document.querySelector('.map__pin--main')
+var mainPin = document.querySelector('.map__pin--main')
 var addRooms = document.querySelector('#room_number');
 var addCapacity = document.querySelector('#capacity');
 var addType = document.querySelector('#type');
@@ -42,46 +42,12 @@ var homeType = {
   'palace': 10000,
 };
 
-/*
 var pinMoveLimits = {
   xMin: 0,
   yMin: screenY,
   xMax: containerWidth,
   yMax: screenY
 };
-
-var onMouseDown = function (evt) {
-
-  var startCoords = {
-    x: evt.clientX,
-    y: evt.clientY
-  }
-};
-
-var onMouseMove = function (evtMove){
-  var startPoint = {
-    x: evtMove.clientX,
-    y: evtMove.clientY
-  }
-  var move = {
-    x: startPoint.x - evtMove.clientX,
-    y: startPoint.y - evtMove.clientY
-  }
-};
-
-var getNewCoord = function (pinMoveLimits){
-mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
-mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
-}
-
-var onMouseUp = function (){
-  document.removeEventListener('mousemove', onMouseMove);
-  document.removeEventListener('mouseup', onMouseUp);
-};
-
-  };
-
-*/
 
 // отключение полей
 fieldsLock.forEach(function (field) {
@@ -227,8 +193,8 @@ var onCardCloseClick = function (data) {
 };
 
 // при нажатии на пин
-document.querySelector('.map__pin--main').addEventListener('mouseup', function () {
-  unlockScreen();
+document.querySelector('.map__pin--main').addEventListener('mouseup', function (evt) {
+  unlockScreen(evt);
   renderPins();
   pinAdress.value = Math.round(pinSize.left) + ', ' + Math.round(pinSize.top);
 });
@@ -259,15 +225,57 @@ var changeCheckOut = function () {
 };
 
 // снять неактивное состояние
-var unlockScreen = function () {
+var unlockScreen = function (evt) {
+  var startPoint = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  // число в диапазоне
+  var getRadomValue = function (value, min, max) {
+    var randomValue = (value < min) ? min : max;
+    return randomValue;
+  };
+
+  // перемещение мышки
+  var onMouseMove = function (evtMove) {
+    var move = {
+      x: startPoint.x - evtMove.clientX,
+      y: startPoint.y - evtMove.clientY
+    };
+
+    startPoint = {
+      x: evtMove.clientX,
+      y: evtMove.clientY
+    };
+    var newCoord = getNewCoord(mainPin.offsetLeft - move.x, mainPin.offsetTop - move.y, pinMoveLimits);
+    mainPin.style.left = newCoord.x + 'px';
+    mainPin.style.top = newCoord.y + 'px';
+  };
+
+  // координаты в пределах экрана
+  var getNewCoord = function (coordinateX, coordinateY, screenLimit) {
+    var coordinates = {
+      x: getRadomValue(coordinateX, screenLimit.xMin, screenLimit.xMax),
+      y: getRadomValue(coordinateY, screenLimit.yMin, screenLimit.yMax)
+    };
+    return coordinates;
+  };
+
+  // отпускание мышки
+  var onMouseUp = function () {
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
   document.querySelector('.map--faded').classList.remove('map--faded');
   document.querySelector('.ad-form--disabled').classList.remove('ad-form--disabled');
   fieldsLock.forEach(function (field) {
     field.disabled = false;
   });
-  // document.addEventListener('mousemove', onMouseMove);
-  // document.addEventListener('mouseup', onMouseUp);
-  // document.addEventListener('mousedown', onMouseDown);
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+  // document.addEventListener('mousedown', unlockScreen);
   addType.addEventListener('change', changeType);
   addCheckIn.addEventListener('change', changeCheckIn);
   addCheckOut.addEventListener('change', changeCheckOut);
