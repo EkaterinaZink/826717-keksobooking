@@ -16,18 +16,25 @@ var housesTypes = {
 var avatars = [];
 var offerInformation = [];
 var fieldsLock = document.querySelectorAll('.ad-form__element');
-var pinSize = document.querySelector('.map__pin--main').getBoundingClientRect();
+// var pinSize = document.querySelector('.map__pin--main').getBoundingClientRect();
 var pinAdress = document.querySelector('#address');
 var mapItem = document.querySelector('.map');
 var popup;
 var cardClose;
-// var mainPin = document.querySelector('.map__pin--main')
+var mainPin = document.querySelector('.map__pin--main');
+var mapPins = document.querySelector('.map__pins');
+var mapPin = document.querySelector('.map__pin');
 var addRooms = document.querySelector('#room_number');
 var addCapacity = document.querySelector('#capacity');
 var addType = document.querySelector('#type');
 var addPrice = document.querySelector('#price');
 var addCheckIn = document.querySelector('#timein');
 var addCheckOut = document.querySelector('#timeout');
+
+var mainPinSize = {
+  width: 62,
+  height: 79
+};
 
 var countRoomsGuests = {
   '1': ['1'],
@@ -42,46 +49,12 @@ var homeType = {
   'palace': 10000,
 };
 
-/*
 var pinMoveLimits = {
   xMin: 0,
-  yMin: screenY,
-  xMax: containerWidth,
-  yMax: screenY
+  yMin: 130,
+  xMax: mapPins.offsetWidth - mapPin.offsetWidth,
+  yMax: 630
 };
-
-var onMouseDown = function (evt) {
-
-  var startCoords = {
-    x: evt.clientX,
-    y: evt.clientY
-  }
-};
-
-var onMouseMove = function (evtMove){
-  var startPoint = {
-    x: evtMove.clientX,
-    y: evtMove.clientY
-  }
-  var move = {
-    x: startPoint.x - evtMove.clientX,
-    y: startPoint.y - evtMove.clientY
-  }
-};
-
-var getNewCoord = function (pinMoveLimits){
-mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
-mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
-}
-
-var onMouseUp = function (){
-  document.removeEventListener('mousemove', onMouseMove);
-  document.removeEventListener('mouseup', onMouseUp);
-};
-
-  };
-
-*/
 
 // отключение полей
 fieldsLock.forEach(function (field) {
@@ -226,13 +199,6 @@ var onCardCloseClick = function (data) {
   };
 };
 
-// при нажатии на пин
-document.querySelector('.map__pin--main').addEventListener('mouseup', function () {
-  unlockScreen();
-  renderPins();
-  pinAdress.value = Math.round(pinSize.left) + ', ' + Math.round(pinSize.top);
-});
-
 // установка соответствия количества гостей количеству комнат
 var getRooms = function () {
   var rooms = addRooms.value;
@@ -258,19 +224,89 @@ var changeCheckOut = function () {
   addCheckIn.value = addCheckOut.value;
 };
 
-// снять неактивное состояние
+var getPinLocation = function () {
+  var xCoord = Math.round(mainPin.offsetLeft + mainPinSize.width / 2);
+  var yCoord = mainPin.offsetTop + mainPinSize.height;
+  return xCoord + ', ' + yCoord;
+};
+
+// число в диапазоне
+var getRadomValue = function (value, min, max) {
+  if (value < min) {
+    value = min;
+  }
+  if (value > max) {
+    value = max;
+  }
+  return value;
+};
+
+// координаты в пределах экрана
+var getNewCoord = function (coordinateX, coordinateY, screenLimit) {
+  var coordinates = {
+    x: getRadomValue(coordinateX, screenLimit.xMin, screenLimit.xMax),
+    y: getRadomValue(coordinateY, screenLimit.yMin, screenLimit.yMax)
+  };
+  return coordinates;
+};
+
+// при клике на мышку
+var onMouseDown = function (evt) {
+  evt.stopPropagation();
+  /* var startPoint = {
+    x: evt.clientX,
+    y: evt.clientY
+  };*/
+  // перемещение мышки
+  var onMouseMove = function (evtMove) {
+    var boundary = document.querySelector('.map__pins').getBoundingClientRect();
+    /* var move = {
+      x: startPoint.x - evtMove.clientX,
+      y: startPoint.y - evtMove.clientY
+    };*/
+    var move = {
+      x: evtMove.clientX - boundary.x,
+      y: evtMove.clientY - boundary.y
+    };
+    /*
+    var startPoint = {
+      x: evtMove.clientX,
+      y: evtMove.clientY
+    };*/
+    // var newCoord = getNewCoord(mainPin.offsetLeft - move.x, mainPin.offsetTop - move.y, pinMoveLimits);
+    var newCoord = getNewCoord(move.x, move.y, pinMoveLimits);
+    mainPin.style.left = newCoord.x + 'px';
+    mainPin.style.top = newCoord.y + 'px';
+    pinAdress.value = getPinLocation();
+  };
+  // отпускание мышки
+  var onMouseUp = function () {
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+  pinAdress.value = getPinLocation();
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+};
+
+mainPin.addEventListener('mousedown', onMouseDown);
+
+// разблокировка экрана
 var unlockScreen = function () {
   document.querySelector('.map--faded').classList.remove('map--faded');
   document.querySelector('.ad-form--disabled').classList.remove('ad-form--disabled');
   fieldsLock.forEach(function (field) {
     field.disabled = false;
   });
-  // document.addEventListener('mousemove', onMouseMove);
-  // document.addEventListener('mouseup', onMouseUp);
-  // document.addEventListener('mousedown', onMouseDown);
   addType.addEventListener('change', changeType);
   addCheckIn.addEventListener('change', changeCheckIn);
   addCheckOut.addEventListener('change', changeCheckOut);
   addRooms.addEventListener('change', getRooms);
   addCapacity.addEventListener('change', getRooms);
 };
+
+// функция вызывающаяся после отпускание мышки
+document.querySelector('.map__pin--main').addEventListener('mouseup', function () {
+  unlockScreen();
+  renderPins();
+});
