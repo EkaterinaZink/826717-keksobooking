@@ -31,6 +31,11 @@ var addPrice = document.querySelector('#price');
 var addCheckIn = document.querySelector('#timein');
 var addCheckOut = document.querySelector('#timeout');
 
+var mainPinSize = {
+  width: 62,
+  height: 79
+};
+
 var countRoomsGuests = {
   '1': ['1'],
   '2': ['1', '2'],
@@ -219,6 +224,12 @@ var changeCheckOut = function () {
   addCheckIn.value = addCheckOut.value;
 };
 
+var getPinLocation = function () {
+  var xCoord = Math.round(mainPin.offsetLeft + mainPinSize.width / 2);
+  var yCoord = mainPin.offsetTop + mainPinSize.height;
+  return xCoord + ', ' + yCoord;
+};
+
 // число в диапазоне
 var getRadomValue = function (value, min, max) {
   if (value < min) {
@@ -232,7 +243,6 @@ var getRadomValue = function (value, min, max) {
 
 // координаты в пределах экрана
 var getNewCoord = function (coordinateX, coordinateY, screenLimit) {
-  console.log(coordinateX, coordinateY, screenLimit);
   var coordinates = {
     x: getRadomValue(coordinateX, screenLimit.xMin, screenLimit.xMax),
     y: getRadomValue(coordinateY, screenLimit.yMin, screenLimit.yMax)
@@ -242,37 +252,40 @@ var getNewCoord = function (coordinateX, coordinateY, screenLimit) {
 
 // при клике на мышку
 var onMouseDown = function (evt) {
-  var startPoint = {
+  evt.stopPropagation();
+  /* var startPoint = {
     x: evt.clientX,
     y: evt.clientY
-  };
+  };*/
   // перемещение мышки
   var onMouseMove = function (evtMove) {
-    /*var move = {
+    var boundary = document.querySelector('.map__pins').getBoundingClientRect();
+    /* var move = {
       x: startPoint.x - evtMove.clientX,
       y: startPoint.y - evtMove.clientY
     };*/
     var move = {
-      x: event.clientX,
-      y: event.clientY
+      x: evtMove.clientX - boundary.x,
+      y: evtMove.clientY - boundary.y
     };
-    startPoint = {
+    /*
+    var startPoint = {
       x: evtMove.clientX,
       y: evtMove.clientY
-    };
-    //var newCoord = getNewCoord(mainPin.offsetLeft - move.x, mainPin.offsetTop - move.y, pinMoveLimits);
-    //var newCoord = getNewCoord(move.x, move.y, pinMoveLimits);
-    console.log (newCoord);
+    };*/
+    // var newCoord = getNewCoord(mainPin.offsetLeft - move.x, mainPin.offsetTop - move.y, pinMoveLimits);
+    var newCoord = getNewCoord(move.x, move.y, pinMoveLimits);
     mainPin.style.left = newCoord.x + 'px';
     mainPin.style.top = newCoord.y + 'px';
+    pinAdress.value = getPinLocation();
   };
   // отпускание мышки
   var onMouseUp = function () {
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
   };
-  pinAdress.value = Math.round(pinSize.left) + ', ' + Math.round(pinSize.top);
-  document.addEventListener('mousedown', onMouseMove);
+  pinAdress.value = getPinLocation();
+  document.addEventListener('mousemove', onMouseMove);
   document.addEventListener('mouseup', onMouseUp);
 };
 
