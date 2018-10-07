@@ -16,7 +16,7 @@ var housesTypes = {
 var avatars = [];
 var offerInformation = [];
 var fieldsLock = document.querySelectorAll('.ad-form__element');
-var pinSize = document.querySelector('.map__pin--main').getBoundingClientRect();
+// var pinSize = document.querySelector('.map__pin--main').getBoundingClientRect();
 var pinAdress = document.querySelector('#address');
 var mapItem = document.querySelector('.map');
 var popup;
