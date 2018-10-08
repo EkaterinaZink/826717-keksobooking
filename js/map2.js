@@ -7,8 +7,8 @@ var mapPins = document.querySelector('.map__pins');
 var mapPin = document.querySelector('.map__pin');
 
 var mainPinSize = {
-  width: 65,
-  height: 65
+  width: 62,
+  height: 79
 };
 
 var pinMoveLimits = {
@@ -59,8 +59,8 @@ var onMouseDown = function (evt) {
     var boundary = document.querySelector('.map__pins').getBoundingClientRect();
 
     var move = {
-      x: evtMove.clientX - boundary.x - mainPinSize.width / 2,
-      y: evtMove.clientY - boundary.y - mainPinSize.height / 2
+      x: evtMove.clientX - boundary.x,
+      y: evtMove.clientY - boundary.y
     };
 
     var newCoord = getNewCoord(move.x, move.y, pinMoveLimits);
@@ -68,7 +68,6 @@ var onMouseDown = function (evt) {
     mainPin.style.top = newCoord.y + 'px';
     pinAdress.value = getPinLocation();
   };
-
 
   // отпускание мышки
   var onMouseUp = function () {
