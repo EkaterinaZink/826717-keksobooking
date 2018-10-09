@@ -52,7 +52,26 @@
     addRooms.addEventListener('change', getRooms);
     addCapacity.addEventListener('change', getRooms);
   };
-  var renderMessage = function (template, messageItem) {
+  var onMessageClick = function (messageItem) {
+    return function () {
+      closeMessage(messageItem);
+    };
+  };
+  var onButtonErrorClick = function (messageItem) {
+    return function () {
+      closeMessage(messageItem);
+    };
+  };
+  var closeMessage = function (messageItem) {
+    if (messageItem) {
+      var parent = messageItem.parentNode;
+      if (parent) {
+        parent.remouveChild(messageItem);
+      }
+      document.removeEventListener('click', onMessageClick);
+    }
+  };
+  var renderMessage = function (template, message) {
     var messageItem = template.cloneNode(true);
     document.addEventListener('click', onMessageClick(messageItem));
     if (message) {
@@ -70,13 +89,14 @@
   var onError = function (errorMessage) {
     renderMessageItem(mainItem, errorTemplate, errorMessage);
   };
-  onload = function () {
+  var onLoad = function () {
     renderMessageItem(mainItem, successTemplate);
   };
 
   var onFormSend = function (evt) {
     evt.preventDefault();
-    window.backend.save(new FormData(document.querySelector('.ad-form'), onLoad, onError);
+    window.backend.save(new FormData(document.querySelector('.ad-form'), onLoad, onError));
   };
+  document.querySelector('.ad-form').addEventListener('submit', onFormSend);
   window.syncronizeFields = syncronizeFields;
 })();
