@@ -95,5 +95,5 @@ var unlockScreen = function () {
 // функция вызывающаяся после отпускание мышки
 document.querySelector('.map__pin--main').addEventListener('mouseup', function () {
   unlockScreen();
-  window.pins();
+  window.pins.renderPins();
 });

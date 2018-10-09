@@ -95,8 +95,10 @@
 
   var onFormSend = function (evt) {
     evt.preventDefault();
-    window.backend.save(new FormData(document.querySelector('.ad-form'), onLoad, onError));
+    window.backend.save(new FormData(document.querySelector('.ad-form')), onLoad, onError);
   };
   document.querySelector('.ad-form').addEventListener('submit', onFormSend);
-  window.syncronizeFields = syncronizeFields;
+  window.form = {
+    syncronizeFields: syncronizeFields
+  };
 })();

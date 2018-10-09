@@ -75,6 +75,7 @@
   generateMockData();
 
   window.generateMockData = generateMockData;
+
 })();
 
 

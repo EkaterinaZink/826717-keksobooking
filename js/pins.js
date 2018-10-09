@@ -4,7 +4,7 @@
   var renderPins = function () {
     var fragment = document.createDocumentFragment();
     var pinTemplate = document.querySelector('#pin');
-    window.generateMockData.forEach(function (item) {
+    window.data.generateMockData.forEach(function (item) {
       var pin = pinTemplate.cloneNode(true).content;
       pin.querySelector('.map__pin').style.left = item.location.x + 'px';
       pin.querySelector('.map__pin').style.top = item.location.y + 'px';
