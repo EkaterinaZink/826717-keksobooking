@@ -89,7 +89,7 @@ var unlockScreen = function () {
   fieldsLock.forEach(function (field) {
     field.disabled = false;
   });
-  window.syncronizeFields();
+  window.form.syncronizeFields();
 };
 
 // функция вызывающаяся после отпускание мышки

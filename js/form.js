@@ -15,6 +15,10 @@
   var addCheckIn = document.querySelector('#timein');
   var addCheckOut = document.querySelector('#timeout');
 
+  var successTemplate = document.querySelector('#succes');
+  var errorTemplate = document.querySelector('#error');
+  var mainItem = document.querySelector('main');
+
   // установка соответствия количества гостей количеству комнат
   var getRooms = function () {
     var message = (addRooms.value <= addCapacity.value) ? 'Количество гостей не соответствует количеству комнат' : '';
@@ -47,6 +51,32 @@
     addCheckOut.addEventListener('change', changeCheckOut);
     addRooms.addEventListener('change', getRooms);
     addCapacity.addEventListener('change', getRooms);
+  };
+  var renderMessage = function (template, messageItem) {
+    var messageItem = template.cloneNode(true);
+    document.addEventListener('click', onMessageClick(messageItem));
+    if (message) {
+      var messageError = messageItem.querySelector('.error__message');
+      var buttonError = messageItem.querySelector('.error__button');
+      messageError.textContent = message;
+      buttonError.addEventListener('click', onButtonErrorClick(messageItem));
+    }
+    return messageItem;
+  };
+  var renderMessageItem = function (parent, template, message) {
+    parent.appendChild(renderMessage(template, message));
+  };
+
+  var onError = function (errorMessage) {
+    renderMessageItem(mainItem, errorTemplate, errorMessage);
+  };
+  onload = function () {
+    renderMessageItem(mainItem, successTemplate);
+  };
+
+  var onFormSend = function (evt) {
+    evt.preventDefault();
+    window.backend.save(new FormData(document.querySelector('.ad-form'), onLoad, onError);
   };
   window.syncronizeFields = syncronizeFields;
 })();
