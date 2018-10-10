@@ -6,13 +6,13 @@
     load: 'https://js.dump.academy/keksobooking/data',
     save: 'https://js.dump.academy/keksobooking'
   };
-  var succesStatus = 200;
+  var SUCCESS_STATUS = 200;
   // функция запроса
   var getServerRequest = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
-      if (xhr.status === succesStatus) {
+      if (xhr.status === SUCCESS_STATUS) {
         onLoad(xhr.response);
       } else {
         onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);

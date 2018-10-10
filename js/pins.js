@@ -1,9 +1,11 @@
 'use strict';
 
 (function () {
+  var pins = [];
   var renderPins = function () {
     var fragment = document.createDocumentFragment();
     var pinTemplate = document.querySelector('#pin');
+
     window.data.generateMockData.forEach(function (item) {
       var pin = pinTemplate.cloneNode(true).content;
       pin.querySelector('.map__pin').style.left = item.location.x + 'px';
@@ -20,7 +22,32 @@
     });
     document.querySelector('.map__pins').appendChild(fragment);
   };
+  var renderPin = function (data) {
+    var item = document.createDocumentFragment();
+    data.forEach(function (element) {
+      item.appendChild(renderPins(element));
+    });
+    document.querySelector('map__pins').appendChild(item);
+  };
+
+  var deletePins = function () {
+    pins.forEach(function (item) {
+      document.querySelector('.map__pins').removeChild(item);
+    });
+    pins = [];
+  };
+
+  var updatePins = function (arr) {
+    var cards = window.filters.filterArray(arr);
+    deletePins();
+    window.card.closePopup();
+    window.pins.renderPins(cards);
+  };
+
   window.pins = {
-    renderPins: renderPins
+    renderPins: renderPins,
+    renderPin: renderPin,
+    deletePins: deletePins,
+    updatePins: updatePins
   };
 })();
