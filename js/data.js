@@ -75,7 +75,8 @@
   generateMockData();
 
   window.data = {
-    generateMockData: generateMockData
+    generateMockData: generateMockData,
+    getRandomItem: getRandomItem
   };
 })();
 

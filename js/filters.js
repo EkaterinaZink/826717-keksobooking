@@ -2,10 +2,19 @@
 
 (function () {
   var numberCard = 5;
-  var price = {
-    lowPrice: '9999',
-    middlePrice: '49999',
-    highPRice: '1000000'
+  var priceElement = {
+    'lowPrice': {
+      min: 0,
+      max: 9999
+    },
+    'middlePrice': {
+      min: 10000,
+      max: 49999
+    },
+    'highPRice': {
+      min: 50000,
+      max: 1000000
+    }
   };
   var filtersElement = document.querySelector('.map__filters');
   var typeFilter = filtersElement.querySelector('.housing-type');
@@ -15,6 +24,20 @@
   var featuresFilter = filtersElement.querySelectorAll('.map__checkbox');
   var filtersSelects = filtersElement.querySelectorAll('select');
   var DEBOUNCE_INTERVAL = 500;
+
+  var debounce = function (fun) {
+    var lastTimeout = null;
+
+    return function () {
+      var args = arguments;
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        fun.apply(null, args);
+      }, DEBOUNCE_INTERVAL);
+    };
+  };
 
   var getCheckedElements = function (arr) {
     var result = [];
@@ -56,7 +79,7 @@
     };
   };
 
-  var enableFilers = function (arr) {
+  var enableFilters = function (arr) {
     filtersElement.addEventListener('change', window.debounce(onFormChange(arr)));
   };
 
@@ -64,27 +87,72 @@
     return param === value;
   };
 
-  var filterByFeatures = funciton(features, arr) {
-    for (var i = 0; i < arr.length; i++) {
-    if (!features.includes(arr[i])) {
-      return false;
-    }
-  }
-  return true;
-
-function debounce(fun) {
-  var lastTimeout = null;
-
-  return function () {
-    if (lastTimeout) {
-      window.clearTimeout(lastTimeout);
-    }
-    lastTimeout = window.setTimeout(fun, DEBOUNCE_INTERVAL);
+  var filterByPrice = function (price, value) {
+    return price >= priceElement[value].min && price <= priceElement[value].max;
   };
-}
-window.filters = {
-  enableFilers: enableFilers
-};
+
+  var filterByFeatures = function (features, arr) {
+    for (var i = 0; i < arr.length; i++) {
+      if (!features.includes(arr[i])) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  var checkFilter = function (param, fun, value) {
+    return filterChange[param] === filterChange[param] ? true : fun(value, filterChange[param]);
+  };
+
+  var filteredCard = function (card) {
+    return checkFilter('type', filterByParam, card.offer.type) && checkFilter('price', filterByPrice, card.offer.price)
+      && checkFilter('rooms', filterByParam, card.offer.rooms.toString()) && checkFilter('features', filterByFeatures, card.offer.features);
+  };
+
+  var shuffleArray = function (arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+      var random = window.data.getRandomItem(0, i);
+      var temp = arr[i];
+      arr[i] = arr[random];
+      arr[random] = temp;
+    }
+    return arr;
+  };
+
+  var filterArray = function (arr) {
+    arr = arr.filter(filteredCard);
+    if (arr.length > numberCard) {
+      shuffleArray(arr);
+      arr.splice(numberCard, arr.length - numberCard);
+    }
+    return arr;
+  };
+
+  var reset = function (arr) {
+    arr.forEach(function (element) {
+      element.value = checkFilter[getPropertyFilter(element.name)];
+    });
+  };
+
+  var clearAll = function (arr) {
+    arr.forEach(function (item) {
+      if (item.checked) {
+        item.checked = false;
+      }
+    });
+  };
+
+  var resetFilters = function () {
+    reset(filtersSelects);
+    clearAll(featuresFilter);
+  };
+
+  window.filters = {
+    enableFilters: enableFilters,
+    resetFilters: resetFilters,
+    filterArray: filterArray,
+    debounce: debounce
+  };
 
 
-}) ();
+})();
