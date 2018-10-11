@@ -99,6 +99,7 @@
   };
   document.querySelector('.ad-form').addEventListener('submit', onFormSend);
   window.form = {
-    syncronizeFields: syncronizeFields
+    syncronizeFields: syncronizeFields,
+    renderMessageItem: renderMessageItem
   };
 })();

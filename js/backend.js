@@ -43,7 +43,7 @@
     request.open('POST', url.save);
     request.send(data);
   };
-  window.backebd = {
+  window.backend = {
     load: load,
     save: save
   };

@@ -5,8 +5,8 @@ var pinAdress = document.querySelector('#address');
 var mainPin = document.querySelector('.map__pin--main');
 var mapPins = document.querySelector('.map__pins');
 var mapPin = document.querySelector('.map__pin');
-var mainItem = document.querySelector('main');
-var errorTemplate = document.querySelector('#error');
+//var mainItem = document.querySelector('main');
+//var errorTemplate = document.querySelector('#error');
 
 var mainPinSize = {
   width: 65,
@@ -84,6 +84,7 @@ var onMouseDown = function (evt) {
 
 mainPin.addEventListener('mousedown', onMouseDown);
 
+
 // разблокировка экрана
 var unlockScreen = function () {
   document.querySelector('.map--faded').classList.remove('map--faded');
@@ -95,22 +96,30 @@ var unlockScreen = function () {
 };
 var loadData = function () {
   window.backend.load(function (data) {
-    window.pins.renderPin = data;
-    window.pins.renderPins = data;
+    window.pins.pins = data;
+    // window.pins.renderPins = data;
   });
 };
-var onError = function (errorMessage) {
+/* var onError = function (errorMessage) {
   window.form.renderMessageItem(mainItem, errorTemplate, errorMessage);
 };
 
-var getPins = function () {
+ var getPins = function () {
   window.backend.load(loadData, onError);
 };
-getPins();
-
+getPins();*/
 // функция вызывающаяся после отпускание мышки
-document.querySelector('.map__pin--main').addEventListener('mouseup', function () {
-  unlockScreen();
-  window.pins.renderPins();
-  loadData();
-});
+var setActivateState = function () {
+  document.querySelector('.map__pin--main').addEventListener('mouseup', function () {
+    unlockScreen();
+    window.pins.renderPins();
+    loadData();
+
+  });
+};
+setActivateState();
+window.map = {
+  setActivateState: setActivateState,
+  loadData: loadData,
+};
+

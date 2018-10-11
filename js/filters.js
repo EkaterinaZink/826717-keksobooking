@@ -47,7 +47,7 @@
     } else {
       filterChange.features = getCheckedElements(featuresFilter);
     }
-  }
+  };
 
   var onFormChange = function (arr) {
     return function (event) {
@@ -60,23 +60,31 @@
     filtersElement.addEventListener('change', window.debounce(onFormChange(arr)));
   };
 
-  var isFilteredByParam = function (param, value) {
+  var filterByParam = function (param, value) {
     return param === value;
   };
 
-  function debounce(fun) {
-    var lastTimeout = null;
-
-    return function () {
-      if (lastTimeout) {
-        window.clearTimeout(lastTimeout);
-      }
-      lastTimeout = window.setTimeout(fun, DEBOUNCE_INTERVAL);
-    };
+  var filterByFeatures = funciton(features, arr) {
+    for (var i = 0; i < arr.length; i++) {
+    if (!features.includes(arr[i])) {
+      return false;
+    }
   }
-  window.filters = {
-    enableFilers: enableFilers
+  return true;
+
+function debounce(fun) {
+  var lastTimeout = null;
+
+  return function () {
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
+    }
+    lastTimeout = window.setTimeout(fun, DEBOUNCE_INTERVAL);
   };
+}
+window.filters = {
+  enableFilers: enableFilers
+};
 
 
-})();
+}) ();
