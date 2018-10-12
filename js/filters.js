@@ -11,33 +11,18 @@
       min: 10000,
       max: 49999
     },
-    'highPRice': {
+    'highPrice': {
       min: 50000,
       max: 1000000
     }
   };
   var filtersElement = document.querySelector('.map__filters');
-  var typeFilter = filtersElement.querySelector('.housing-type');
-  var priceFilter = filtersElement.querySelector('.housing-price');
-  var roomsFilter = filtersElement.querySelector('.housing-rooms');
-  var guestsFilter = filtersElement.querySelector('.housing-guests');
+  var typeFilter = filtersElement.querySelector('[name=housing-type]');
+  var priceFilter = filtersElement.querySelector('[name=housing-price]');
+  var roomsFilter = filtersElement.querySelector('[name=housing-rooms]');
+  var guestsFilter = filtersElement.querySelector('[name=housing-guests]');
   var featuresFilter = filtersElement.querySelectorAll('.map__checkbox');
   var filtersSelects = filtersElement.querySelectorAll('select');
-  var DEBOUNCE_INTERVAL = 500;
-
-  var debounce = function (fun) {
-    var lastTimeout = null;
-
-    return function () {
-      var args = arguments;
-      if (lastTimeout) {
-        window.clearTimeout(lastTimeout);
-      }
-      lastTimeout = window.setTimeout(function () {
-        fun.apply(null, args);
-      }, DEBOUNCE_INTERVAL);
-    };
-  };
 
   var getCheckedElements = function (arr) {
     var result = [];
@@ -73,8 +58,8 @@
   };
 
   var onFormChange = function (arr) {
-    return function (event) {
-      updateFilter(event.target);
+    return function (data) {
+      updateFilter(data.target);
       window.pins.updatePins(arr);
     };
   };
@@ -105,24 +90,16 @@
   };
 
   var filteredCard = function (card) {
-    return checkFilter('type', filterByParam, card.offer.type) && checkFilter('price', filterByPrice, card.offer.price)
-      && checkFilter('rooms', filterByParam, card.offer.rooms.toString()) && checkFilter('features', filterByFeatures, card.offer.features);
-  };
-
-  var shuffleArray = function (arr) {
-    for (var i = arr.length - 1; i > 0; i--) {
-      var random = window.data.getRandomItem(0, i);
-      var temp = arr[i];
-      arr[i] = arr[random];
-      arr[random] = temp;
-    }
-    return arr;
+    return checkFilter('type', filterByParam, card.offer.type)
+      && checkFilter('price', filterByPrice, card.offer.price)
+      && checkFilter('rooms', filterByParam, card.offer.rooms.toString())
+      && checkFilter('features', filterByFeatures, card.offer.features);
   };
 
   var filterArray = function (arr) {
     arr = arr.filter(filteredCard);
     if (arr.length > numberCard) {
-      shuffleArray(arr);
+      window.utils.shuffleArray(arr);
       arr.splice(numberCard, arr.length - numberCard);
     }
     return arr;
@@ -134,25 +111,15 @@
     });
   };
 
-  var clearAll = function (arr) {
-    arr.forEach(function (item) {
-      if (item.checked) {
-        item.checked = false;
-      }
-    });
-  };
-
   var resetFilters = function () {
     reset(filtersSelects);
-    clearAll(featuresFilter);
+    window.utils.deleteCheckboxes(featuresFilter);
   };
 
   window.filters = {
     enableFilters: enableFilters,
     resetFilters: resetFilters,
-    filterArray: filterArray,
-    debounce: debounce
+    filterArray: filterArray
   };
-
 
 })();

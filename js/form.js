@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   var homeType = {
     'bungalo': 0,
     'flat': 1000,
@@ -8,16 +9,29 @@
     'palace': 10000,
   };
 
-  var addRooms = document.querySelector('#room_number');
-  var addCapacity = document.querySelector('#capacity');
-  var addType = document.querySelector('#type');
-  var addPrice = document.querySelector('#price');
-  var addCheckIn = document.querySelector('#timein');
-  var addCheckOut = document.querySelector('#timeout');
-
-  var successTemplate = document.querySelector('#succes');
-  var errorTemplate = document.querySelector('#error');
+  var adForm = document.querySelector('.ad-form');
+  var adFormReset = adForm.querySelector('.ad-form__reset');
+  var adSelect = adForm.querySelectorAll('select');
+  var addRooms = adForm.querySelector('[name=rooms]');
+  var addTitle = adForm.querySelector('[name=title]');
+  var addCapacity = adForm.querySelector('[name=capacity]');
+  var addType = adForm.querySelector('[name=type]');
+  var addPrice = adForm.querySelector('[name=price]');
+  var addCheckIn = adForm.querySelector('[name=timein]');
+  var addCheckOut = adForm.querySelector('[name=timeout]');
+  var addFeatures = adForm.querySelectorAll('[name=features]');
+  var addDescription = adForm.querySelector('[name=description]');
   var mainItem = document.querySelector('main');
+  var success = document.querySelector('#success').content.querySelector('.success');
+  var error = document.querySelector('#error').content.querySelector('.error');
+
+  var initialFilter = {
+    'type': 'flat',
+    'timein': '12:00',
+    'timeout': '12:00',
+    'rooms': '1',
+    'capacity': '1'
+  };
 
   // установка соответствия количества гостей количеству комнат
   var getRooms = function () {
@@ -45,61 +59,49 @@
     addCheckIn.value = addCheckOut.value;
   };
 
+  var resetAll = function (arr) {
+    arr.forEach(function (item) {
+      item.value = initialFilter[item.name];
+    });
+  };
+
+  var clearAll = function () {
+    window.utils.deleteCheckboxes(addFeatures);
+    resetAll(adSelect);
+    addTitle.value = '';
+    addPrice.value = '';
+    addDescription.value = '';
+  };
+
+  var onReset = function (event) {
+    event.preventDefault();
+    clearAll();
+    window.map.lockScreen();
+  };
   var syncronizeFields = function () {
     addType.addEventListener('change', changeType);
     addCheckIn.addEventListener('change', changeCheckIn);
     addCheckOut.addEventListener('change', changeCheckOut);
     addRooms.addEventListener('change', getRooms);
     addCapacity.addEventListener('change', getRooms);
-  };
-  var onMessageClick = function (messageItem) {
-    return function () {
-      closeMessage(messageItem);
-    };
-  };
-  var onButtonErrorClick = function (messageItem) {
-    return function () {
-      closeMessage(messageItem);
-    };
-  };
-  var closeMessage = function (messageItem) {
-    if (messageItem) {
-      var parent = messageItem.parentNode;
-      if (parent) {
-        parent.remouveChild(messageItem);
-      }
-      document.removeEventListener('click', onMessageClick);
-    }
-  };
-  var renderMessage = function (template, message) {
-    var messageItem = template.cloneNode(true);
-    document.addEventListener('click', onMessageClick(messageItem));
-    if (message) {
-      var messageError = messageItem.querySelector('.error__message');
-      var buttonError = messageItem.querySelector('.error__button');
-      messageError.textContent = message;
-      buttonError.addEventListener('click', onButtonErrorClick(messageItem));
-    }
-    return messageItem;
-  };
-  var renderMessageItem = function (parent, template, message) {
-    parent.appendChild(renderMessage(template, message));
+    adFormReset.addEventListener('click', onReset);
   };
 
   var onError = function (errorMessage) {
-    renderMessageItem(mainItem, errorTemplate, errorMessage);
-  };
-  var onLoad = function () {
-    renderMessageItem(mainItem, successTemplate);
+    window.utils.renderMessageItem(mainItem, error, errorMessage);
   };
 
-  var onFormSend = function (evt) {
-    evt.preventDefault();
-    window.backend.save(new FormData(document.querySelector('.ad-form')), onLoad, onError);
+  var onLoad = function () {
+    clearAll();
+    window.map.unlockScreen();
+    window.utils.renderMessageItem(mainItem, success);
   };
-  document.querySelector('.ad-form').addEventListener('submit', onFormSend);
-  window.form = {
-    syncronizeFields: syncronizeFields,
-    renderMessageItem: renderMessageItem
+
+  var onFormSend = function (event) {
+    event.preventDefault();
+    window.backend.save(new FormData(adForm), onLoad, onError);
   };
+
+  adForm.addEventListener('submit', onFormSend);
+  window.syncronizeFields = syncronizeFields;
 })();

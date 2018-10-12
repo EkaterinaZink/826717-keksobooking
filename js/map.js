@@ -1,125 +1,65 @@
 'use strict';
 
-var fieldsLock = document.querySelectorAll('.ad-form__element');
-var pinAdress = document.querySelector('#address');
-var mainPin = document.querySelector('.map__pin--main');
-var mapPins = document.querySelector('.map__pins');
-var mapPin = document.querySelector('.map__pin');
-//var mainItem = document.querySelector('main');
-//var errorTemplate = document.querySelector('#error');
+(function () {
+  var adFields = document.querySelectorAll('.ad-form-header, .ad-form__element');
+  var pinAdress = document.querySelector('[name=address]');
+  var adForm = document.querySelector('.ad-form');
+  var map = document.querySelector('.map');
+  var mapFilter = document.querySelectorAll('.map__filter, .map__features');
+  var mainItem = document.querySelector('main');
+  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  var showPins = false;
 
-var mainPinSize = {
-  width: 65,
-  height: 65
-};
-
-var pinMoveLimits = {
-  xMin: 0,
-  yMin: 130,
-  xMax: mapPins.offsetWidth - mapPin.offsetWidth,
-  yMax: 630
-};
-
-// отключение полей
-fieldsLock.forEach(function (field) {
-  field.setAttribute('disabled', 'disabled');
-  return false;
-});
-
-var getPinLocation = function () {
-  var xCoord = Math.round(mainPin.offsetLeft + mainPinSize.width / 2);
-  var yCoord = mainPin.offsetTop + mainPinSize.height;
-  return xCoord + ', ' + yCoord;
-};
-
-// число в диапазоне
-var getRadomValue = function (value, min, max) {
-  if (value < min) {
-    value = min;
-  }
-  if (value > max) {
-    value = max;
-  }
-  return value;
-};
-
-// координаты в пределах экрана
-var getNewCoord = function (coordinateX, coordinateY, screenLimit) {
-  var coordinates = {
-    x: getRadomValue(coordinateX, screenLimit.xMin, screenLimit.xMax),
-    y: getRadomValue(coordinateY, screenLimit.yMin, screenLimit.yMax)
-  };
-  return coordinates;
-};
-
-// при клике на мышку
-var onMouseDown = function (evt) {
-  evt.stopPropagation();
-
-  // перемещение мышки
-  var onMouseMove = function (evtMove) {
-    var boundary = document.querySelector('.map__pins').getBoundingClientRect();
-
-    var move = {
-      x: evtMove.clientX - boundary.x - mainPinSize.width / 2,
-      y: evtMove.clientY - boundary.y - mainPinSize.height / 2
-    };
-
-    var newCoord = getNewCoord(move.x, move.y, pinMoveLimits);
-    mainPin.style.left = newCoord.x + 'px';
-    mainPin.style.top = newCoord.y + 'px';
-    pinAdress.value = getPinLocation();
+  var lockFields = function (arr, data, classType) {
+    arr.forEach(function (field) {
+      field.setAttribute('disabled', '');
+    });
+    data.classList.add(classType);
   };
 
-
-  // отпускание мышки
-  var onMouseUp = function () {
-    document.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('mouseup', onMouseUp);
+  var unlockFields = function (arr, data, classType) {
+    arr.forEach(function (field) {
+      field.removeAttribute('disabled');
+    });
+    data.classList.remove(classType);
   };
-  pinAdress.value = getPinLocation();
-  document.addEventListener('mousemove', onMouseMove);
-  document.addEventListener('mouseup', onMouseUp);
-};
 
-mainPin.addEventListener('mousedown', onMouseDown);
+  var onError = function (errorMessage) {
+    window.form.renderMessage(mainItem, errorTemplate, errorMessage);
+  };
 
+  var onLoad = function (data) {
+    window.pins.updatePins(data);
+    window.filters.enableFilters(data);
+    showPins = true;
+  };
 
-// разблокировка экрана
-var unlockScreen = function () {
-  document.querySelector('.map--faded').classList.remove('map--faded');
-  document.querySelector('.ad-form--disabled').classList.remove('ad-form--disabled');
-  fieldsLock.forEach(function (field) {
-    field.disabled = false;
-  });
-  window.form.syncronizeFields();
-};
-var loadData = function () {
-  window.backend.load(function (data) {
-    window.pins.pins = data;
-    // window.pins.renderPins = data;
-  });
-};
-/* var onError = function (errorMessage) {
-  window.form.renderMessageItem(mainItem, errorTemplate, errorMessage);
-};
+  var getPins = function () {
+    window.backend.load(onLoad, onError);
+  };
 
- var getPins = function () {
-  window.backend.load(loadData, onError);
-};
-getPins();*/
-// функция вызывающаяся после отпускание мышки
-var setActivateState = function () {
-  document.querySelector('.map__pin--main').addEventListener('mouseup', function () {
-    unlockScreen();
-    window.pins.renderPins();
-    loadData();
+  var unlockScreen = function () {
+    getPins();
+    unlockFields(mapFilter, map, 'map--faded');
+    unlockFields(adFields, adForm, '.ad-form--disabled');
+  };
 
-  });
-};
-setActivateState();
-window.map = {
-  setActivateState: setActivateState,
-  loadData: loadData,
-};
+  var lockScreen = function () {
+    lockFields(adFields, map, 'map--faded');
+    lockFields(mapFilter, adForm, '.ad-form--disabled');
+    if (showPins) {
+      showPins = false;
+      window.pins.deletePins();
+      window.card.closeCard();
+    }
+    window.filters.resetFilters();
+    window.mainPin.resetPin();
+    pinAdress.value = window.mainPin.getPinLocation();
+  };
+  lockScreen();
 
+  window.map = {
+    lockScreen: lockScreen,
+    unlockScreen: unlockScreen,
+  };
+})();
