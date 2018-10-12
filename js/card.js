@@ -10,8 +10,8 @@
   var popup;
   var cardClose;
   var mapItem = document.querySelector('.map');
-  var FEATURE_CLASS = 'popup__feature';
-  var ACTIVE_CARD = 'map__pin--active';
+  var popupFeature = 'popup__feature';
+  var activePin = 'map__pin--active';
   var photoParams = {
     WIDTH: 45,
     HEIGHT: 40,
@@ -19,15 +19,13 @@
     CLASS_NAME: 'popup__photo'
   };
 
-  var cardTemplateElement = document.querySelector('#card')
-    .content
-    .querySelector('.map__card');
+  var cardTemplateElement = document.querySelector('#card').content.querySelector('.map__card');
   var mapFiltersContainer = document.querySelector('.map__filters-container');
 
   // функция создания ноды элемента li
   var renderFeatures = function (value) {
     var li = document.createElement('li');
-    li.classList.add(FEATURE_CLASS, FEATURE_CLASS + '--' + value);
+    li.classList.add(popupFeature, popupFeature + '--' + value);
     return li;
   };
 
@@ -44,7 +42,6 @@
     var featuresPopup = cardTemplate.querySelector('.popup__features');
     var descriptionPopup = cardTemplate.querySelector('.popup__description');
     var photosPopup = cardTemplate.querySelector('.popup__photos img');
-    cardClose = cardTemplate.querySelector('.popup__close');
     avatarPopup.src = data.offer.avatar;
     titlePopup.textContent = data.offer.title;
     addressPopup.textContent = data.offer.address;
@@ -61,19 +58,8 @@
       cardTemplate.removeChild(featuresPopup);
     }
     data.offer.photos.forEach(function (item) {
-      var photo = photosPopup.cloneNode(true);
-      photo.src = item;
       photosPopup.appendChild(window.utils.renderPhoto(item, photoParams));
     });
-    photosPopup.remove();
-    var features = featuresPopup.cloneNode(true);
-    var featuresElement = featuresPopup;
-    featuresElement.innerHTML = '';
-    data.offer.features.forEach(function (item) {
-      var featuresItem = features.querySelector('.popup__feature--' + item).cloneNode(true);
-      featuresElement.appendChild(featuresItem);
-    });
-
     popup = cardTemplate;
     cardClose.addEventListener('click', onCardCloseClick(data));
     cardClose.addEventListener('keydown', onPressEnter(data));
@@ -90,7 +76,7 @@
   var renderPopup = function (card, data) {
     closeCard(data);
     renderCardElement(card, data);
-    data.classList.add(ACTIVE_CARD);
+    data.classList.add(activePin);
   };
 
   var closeCard = function (data) {
@@ -101,7 +87,7 @@
       document.removeEventListener('keydown', onPressEsc);
     }
     if (data) {
-      data.classList.remove(ACTIVE_CARD);
+      data.classList.remove(activePin);
     }
   };
 

@@ -26,11 +26,21 @@
     y: mainPin.style.top
   };
 
+  var getRandomValue = function (value, min, max) {
+    if (value < min) {
+      value = min;
+    }
+    if (value > max) {
+      value = max;
+    }
+    return value;
+  };
+
   // координаты в пределах экрана
   var getNewCoord = function (coordinateX, coordinateY, screenLimit) {
     var coordinates = {
-      x: window.utils.getRadomValue(coordinateX, screenLimit.xMin, screenLimit.xMax),
-      y: window.utils.getRadomValue(coordinateY, screenLimit.yMin, screenLimit.yMax)
+      x: getRandomValue(coordinateX, screenLimit.xMin, screenLimit.xMax),
+      y: getRandomValue(coordinateY, screenLimit.yMin, screenLimit.yMax)
     };
     return coordinates;
   };

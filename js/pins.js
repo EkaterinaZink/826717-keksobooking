@@ -32,16 +32,9 @@
 
   var deletePins = function () {
     pins.forEach(function (item) {
-      document.querySelector('.map__pins').removeChild(item);
+      mapPins.removeChild(item);
     });
     pins = [];
-  };
-
-  var updatePins = function (arr) {
-    var cards = window.filters.filterArray(arr);
-    deletePins();
-    window.card.closeCard();
-    window.pins.renderPins(cards);
   };
 
   var activatePin = function (data, item) {
@@ -64,6 +57,13 @@
     return function (event) {
       window.utils.isEvtEnter(event, activatePin, data, item);
     };
+  };
+
+  var updatePins = function (arr) {
+    var cards = window.filters.filterArray(arr);
+    deletePins();
+    window.card.closeCard();
+    window.pins.renderPins(cards);
   };
 
   window.pins = {
