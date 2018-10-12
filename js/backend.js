@@ -2,11 +2,11 @@
 
 (function () {
 
+  var SUCCESS_STATUS = 200;
   var url = {
     load: 'https://js.dump.academy/keksobooking/data',
     save: 'https://js.dump.academy/keksobooking'
   };
-  var SUCCESS_STATUS = 200;
   // функция запроса
   var getServerRequest = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();

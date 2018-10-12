@@ -54,8 +54,8 @@
   };
 
   var onPinPress = function (data, item) {
-    return function (event) {
-      window.utils.isEvtEnter(event, activatePin, data, item);
+    return function (evt) {
+      window.utils.isEvtEnter(evt, activatePin, data, item);
     };
   };
 

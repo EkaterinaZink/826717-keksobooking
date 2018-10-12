@@ -2,9 +2,9 @@
 
 (function () {
 
-  var itemTitle = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-  var itemType = ['palace', 'flat', 'house', 'bungalo'];
-  var timeCheck = ['12:00', '13:00', '14:00'];
+  var itemTitles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
+  var itemTypes = ['palace', 'flat', 'house', 'bungalo'];
+  var timeChecks = ['12:00', '13:00', '14:00'];
   var typeFeatures = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   var containerWidth = document.querySelector('.map__pins').offsetWidth;
   var avatars = [];
@@ -36,10 +36,10 @@
       price: getRandomInt(1000, 1000000),
       guests: getRandomInt(1, 10),
       rooms: getRandomInt(1, 5),
-      title: itemTitle[getRandomInt(0, itemTitle.length)],
-      type: itemType[getRandomInt(0, 2)],
-      checkin: timeCheck[getRandomInt(0, 2)],
-      checkout: timeCheck[getRandomInt(0, 2)],
+      title: itemTitles[getRandomInt(0, itemTitles.length)],
+      type: itemTypes[getRandomInt(0, 2)],
+      checkin: timeChecks[getRandomInt(0, 2)],
+      checkout: timeChecks[getRandomInt(0, 2)],
       features: typeFeatures.slice(0, getRandomInt(1, typeFeatures.length - 1)),
       description: '',
       photos: getRandomPhoto(),

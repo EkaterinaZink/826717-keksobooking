@@ -2,7 +2,7 @@
 
 (function () {
 
-  var homeType = {
+  var HomeType = {
     'bungalo': 0,
     'flat': 1000,
     'house': 5000,
@@ -12,7 +12,6 @@
   var adForm = document.querySelector('.ad-form');
   var adFormReset = adForm.querySelector('.ad-form__reset');
   var adSelect = adForm.querySelectorAll('select');
-  var adSubmit = adForm.querySelector('.ad-form__submit');
   var addRooms = adForm.querySelector('[name=rooms]');
   var addTitle = adForm.querySelector('[name=title]');
   var addCapacity = adForm.querySelector('[name=capacity]');
@@ -51,7 +50,7 @@
 
   // изменение типа жилья в зависимости от цены
   var changeType = function () {
-    var minPrice = homeType[addType.value];
+    var minPrice = HomeType[addType.value];
     addPrice.placeholder = minPrice;
     addPrice.min = minPrice;
   };
@@ -80,8 +79,8 @@
     addDescription.value = '';
   };
 
-  var onReset = function (event) {
-    event.preventDefault();
+  var onReset = function (evt) {
+    evt.preventDefault();
     clearAll();
     window.map.lockScreen();
   };
@@ -91,7 +90,6 @@
     addCheckIn.addEventListener('change', changeCheckIn);
     addCheckOut.addEventListener('change', changeCheckOut);
     addRooms.addEventListener('change', getRooms);
-    adSubmit.addEventListener('click', getRooms);
     addCapacity.addEventListener('change', getRooms);
     adFormReset.addEventListener('click', onReset);
   };
@@ -106,8 +104,8 @@
     window.utils.renderMessageItem(mainItem, success);
   };
 
-  var onFormSend = function (event) {
-    event.preventDefault();
+  var onFormSend = function (evt) {
+    evt.preventDefault();
     window.backend.save(new FormData(adForm), onLoad, onError);
   };
 

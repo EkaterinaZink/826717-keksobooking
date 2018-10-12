@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var keyCodes = {
+  var KeyCodes = {
     ESC: 27,
     ENTER: 13
   };
@@ -29,12 +29,12 @@
     return img;
   };
   var isEvtEsc = function (data, action, element) {
-    if (data.keyCode === keyCodes.ESC) {
+    if (data.keyCode === KeyCodes.ESC) {
       action(element);
     }
   };
   var isEvtEnter = function (data, action, firstElement, secondElement) {
-    if (data.keyCode === keyCodes.ENTER) {
+    if (data.keyCode === KeyCodes.ENTER) {
       action(firstElement, secondElement);
     }
   };
@@ -46,7 +46,7 @@
     if (messageItem) {
       var messageError = message.querySelector('.error__message');
       var buttonError = message.querySelector('.error__button');
-      messageError.textContent = message;
+      messageError.textContent = messageItem;
       buttonError.addEventListener('click', onErrorClick(message));
     }
     return message;
