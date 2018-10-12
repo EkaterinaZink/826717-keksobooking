@@ -1,19 +1,20 @@
 'use strict';
 
 (function () {
-  var numberCard = 5;
+  var NUMBER_CARD = 5;
+
   var priceElement = {
-    'lowPrice': {
-      min: 0,
-      max: 9999
+    'low': {
+      MIN: 0,
+      MAX: 9999
     },
-    'middlePrice': {
-      min: 10000,
-      max: 49999
+    'middle': {
+      MIN: 10000,
+      MAX: 49999
     },
-    'highPrice': {
-      min: 50000,
-      max: 1000000
+    'high': {
+      MIN: 50000,
+      MAX: 1000000
     }
   };
   var filtersElement = document.querySelector('.map__filters');
@@ -23,6 +24,14 @@
   var guestsFilter = filtersElement.querySelector('[name=housing-guests]');
   var featuresFilter = filtersElement.querySelectorAll('.map__checkbox');
   var filtersSelects = filtersElement.querySelectorAll('select');
+
+  var startFilter = {
+    type: 'any',
+    price: 'any',
+    rooms: 'any',
+    guests: 'any',
+    features: []
+  };
 
   var getCheckedElements = function (arr) {
     var result = [];
@@ -73,7 +82,7 @@
   };
 
   var filterByPrice = function (price, value) {
-    return price >= priceElement[value].min && price <= priceElement[value].max;
+    return price >= priceElement[value].MIN && price <= priceElement[value].MAX;
   };
 
   var filterByFeatures = function (features, arr) {
@@ -86,28 +95,29 @@
   };
 
   var checkFilter = function (param, fun, value) {
-    return filterChange[param] === filterChange[param] ? true : fun(value, filterChange[param]);
+    return filterChange[param] === startFilter[param] ? true : fun(value, filterChange[param]);
   };
 
   var filteredCard = function (card) {
     return checkFilter('type', filterByParam, card.offer.type)
       && checkFilter('price', filterByPrice, card.offer.price)
       && checkFilter('rooms', filterByParam, card.offer.rooms.toString())
+      && checkFilter('guests', filterByParam, card.offer.guests.toString())
       && checkFilter('features', filterByFeatures, card.offer.features);
   };
 
   var filterArray = function (arr) {
     arr = arr.filter(filteredCard);
-    if (arr.length > numberCard) {
+    if (arr.length > NUMBER_CARD) {
       window.utils.shuffleArray(arr);
-      arr.splice(numberCard, arr.length - numberCard);
+      arr.splice(NUMBER_CARD, arr.length - NUMBER_CARD);
     }
     return arr;
   };
 
   var reset = function (arr) {
     arr.forEach(function (element) {
-      element.value = checkFilter[getPropertyFilter(element.name)];
+      element.value = startFilter[getPropertyFilter(element.name)];
     });
   };
 

@@ -12,6 +12,7 @@
   var adForm = document.querySelector('.ad-form');
   var adFormReset = adForm.querySelector('.ad-form__reset');
   var adSelect = adForm.querySelectorAll('select');
+  var adSubmit = adForm.querySelector('.ad-form__submit');
   var addRooms = adForm.querySelector('[name=rooms]');
   var addTitle = adForm.querySelector('[name=title]');
   var addCapacity = adForm.querySelector('[name=capacity]');
@@ -33,12 +34,18 @@
     'capacity': '1'
   };
 
+  var roomParams = {
+    '1': ['1'],
+    '2': ['1', '2'],
+    '3': ['1', '2', '3'],
+    '100': ['0']
+  };
+
   // установка соответствия количества гостей количеству комнат
   var getRooms = function () {
-    var message = (addRooms.value <= addCapacity.value) ? 'Количество гостей не соответствует количеству комнат' : '';
-    if (addRooms.value === '100') {
-      message = (addCapacity.value !== '0') ? 'Количество гостей не соответствует количеству комнат' : '';
-    }
+    var rooms = addRooms.value;
+    var capacity = addCapacity.value;
+    var message = (roomParams[rooms].indexOf(capacity) === -1) ? 'Количество гостей не соответствует количеству комнат' : '';
     addCapacity.setCustomValidity(message);
   };
 
@@ -78,11 +85,13 @@
     clearAll();
     window.map.lockScreen();
   };
+
   var syncronizeFields = function () {
     addType.addEventListener('change', changeType);
     addCheckIn.addEventListener('change', changeCheckIn);
     addCheckOut.addEventListener('change', changeCheckOut);
     addRooms.addEventListener('change', getRooms);
+    adSubmit.addEventListener('click', getRooms);
     addCapacity.addEventListener('change', getRooms);
     adFormReset.addEventListener('click', onReset);
   };

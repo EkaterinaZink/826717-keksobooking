@@ -7,12 +7,11 @@
   var mapPins = document.querySelector('.map__pins');
   var mapPin = document.querySelector('.map__pin');
   var pinActive;
-
   var renderPin = function (item) {
     var pin = pinTemplate.cloneNode(true);
     var imgPin = pin.querySelector('img');
     var pinWidth = mapPin.offsetWidth;
-    var pinHeight = mapPin.ofssetHight;
+    var pinHeight = mapPin.offsetHeight;
     pin.style.left = item.location.x - pinWidth / 2 + 'px';
     pin.style.top = item.location.y - pinHeight + 'px';
     imgPin.src = item.author.avatar;
@@ -22,6 +21,7 @@
     pins.push(pin);
     return (pin);
   };
+
   var renderPins = function (arr) {
     var fragment = document.createDocumentFragment();
     arr.forEach(function (item) {

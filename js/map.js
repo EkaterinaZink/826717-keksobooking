@@ -19,7 +19,7 @@
 
   var unlockFields = function (arr, data, classType) {
     arr.forEach(function (field) {
-      field.removeAttribute('disabled');
+      field.removeAttribute('disabled', '');
     });
     data.classList.remove(classType);
   };
@@ -41,12 +41,12 @@
   var unlockScreen = function () {
     getPins();
     unlockFields(mapFilter, map, 'map--faded');
-    unlockFields(adFields, adForm, '.ad-form--disabled');
+    unlockFields(adFields, adForm, 'ad-form--disabled');
   };
 
   var lockScreen = function () {
     lockFields(adFields, map, 'map--faded');
-    lockFields(mapFilter, adForm, '.ad-form--disabled');
+    lockFields(mapFilter, adForm, 'ad-form--disabled');
     if (showPins) {
       showPins = false;
       window.pins.deletePins();

@@ -28,10 +28,11 @@
     }
     return avatars;
   };
+  generateAvatars();
 
   var getBooking = function () {
     var card = {
-      avatar: generateAvatars.splice(getRandomInt(0, avatars.length - 1), 1)[0],
+      avatar: avatars.splice(getRandomInt(0, avatars.length - 1), 1)[0],
       price: getRandomInt(1000, 1000000),
       guests: getRandomInt(1, 10),
       rooms: getRandomInt(1, 5),
