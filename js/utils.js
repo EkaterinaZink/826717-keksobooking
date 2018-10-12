@@ -16,6 +16,7 @@
     }
     return value;
   };
+
   var renderPhoto = function (data, params) {
     var img = document.createElement('img');
     if (params.CLASS_NAME) {

@@ -10,24 +10,10 @@
   var popup;
   var cardClose;
   var mapItem = document.querySelector('.map');
-  var popupFeature = 'popup__feature';
   var activePin = 'map__pin--active';
-  var photoParams = {
-    WIDTH: 45,
-    HEIGHT: 40,
-    ALT_TEXT: 'Фотография жилья',
-    CLASS_NAME: 'popup__photo'
-  };
 
   var cardTemplateElement = document.querySelector('#card').content.querySelector('.map__card');
   var mapFiltersContainer = document.querySelector('.map__filters-container');
-
-  // функция создания ноды элемента li
-  var renderFeatures = function (value) {
-    var li = document.createElement('li');
-    li.classList.add(popupFeature, popupFeature + '--' + value);
-    return li;
-  };
 
   var renderCard = function (data) {
     var cardTemplate = cardTemplateElement.cloneNode(true);
@@ -42,7 +28,7 @@
     var featuresPopup = cardTemplate.querySelector('.popup__features');
     var descriptionPopup = cardTemplate.querySelector('.popup__description');
     var photosPopup = cardTemplate.querySelector('.popup__photos img');
-    avatarPopup.src = data.offer.avatar;
+    avatarPopup.src = data.author.avatar;
     titlePopup.textContent = data.offer.title;
     addressPopup.textContent = data.offer.address;
     pricePopup.textContent = data.offer.price + '₽/ночь';
@@ -50,15 +36,17 @@
     capacityPopup.textContent = data.offer.rooms + ' комнаты для ' + data.offer.guests + ' гостей';
     timePopup.textContent = 'Заезд после ' + data.offer.checkin + ', выезд до ' + data.offer.checkout;
     descriptionPopup.textContent = data.offer.description;
-    if (data.offer.features.length) {
-      data.offer.features.forEach(function (item) {
-        featuresPopup.appendChild(renderFeatures(item));
-      });
-    } else {
-      cardTemplate.removeChild(featuresPopup);
-    }
     data.offer.photos.forEach(function (item) {
-      photosPopup.appendChild(window.utils.renderPhoto(item, photoParams));
+      var photo = photosPopup.cloneNode(true);
+      photo.src = item;
+      cardTemplate.querySelector('.popup__photos').appendChild(photo);
+    });
+    cardTemplate.querySelector('.popup__photos img:nth-child(1)').remove();
+    var features = featuresPopup.cloneNode(true);
+    featuresPopup.innerHTML = '';
+    data.offer.features.forEach(function (item) {
+      var featuresItem = features.querySelector('.popup__feature--' + item).cloneNode(true);
+      featuresPopup.appendChild(featuresItem);
     });
     popup = cardTemplate;
     cardClose.addEventListener('click', onCardCloseClick(data));

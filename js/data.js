@@ -8,13 +8,12 @@
   var typeFeatures = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   var containerWidth = document.querySelector('.map__pins').offsetWidth;
   var avatars = [];
-  var offerInformation = [];
 
   var getRandomInt = function (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
-  var getRandomItem = function () {
+  var getRandomPhoto = function () {
     var randomPhotos = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
     var newPhotosArray = [];
     for (var i = 0; i < 3; i++) {
@@ -27,57 +26,29 @@
     for (var i = 1; i <= 8; i++) {
       avatars.push('img/avatars/user0' + i + '.png');
     }
+    return avatars;
   };
 
   var getBooking = function () {
-    var randomPrice = getRandomInt(1000, 1000000);
-    var randomGuests = getRandomInt(1, 10);
-    var randomRooms = getRandomInt(1, 5);
-    var randomTitle = itemTitle[getRandomInt(0, itemTitle.length)];
-    var randomType = itemType[getRandomInt(0, 2)];
-    var randomCheckin = timeCheck[getRandomInt(0, 2)];
-    var randomCheckout = timeCheck[getRandomInt(0, 2)];
-    var randomFeature = typeFeatures.slice(0, getRandomInt(1, typeFeatures.length - 1));
-    var xLocation = getRandomInt(0, containerWidth);
-    var yLocation = getRandomInt(130, 630);
-    var locationAddress = xLocation + ', ' + yLocation;
-
-    return {
-      author: {
-        avatar: avatars.splice(getRandomInt(0, avatars.length - 1), 1)[0],
-      },
-      offer: {
-        title: randomTitle,
-        address: locationAddress,
-        price: randomPrice,
-        type: randomType,
-        rooms: randomRooms,
-        guests: randomGuests,
-        checkin: randomCheckin,
-        checkout: randomCheckout,
-        features: randomFeature,
-        description: '',
-        photos: getRandomItem()
-      },
-      location: {
-        x: xLocation,
-        y: yLocation
-      }
+    var card = {
+      avatar: generateAvatars.splice(getRandomInt(0, avatars.length - 1), 1)[0],
+      price: getRandomInt(1000, 1000000),
+      guests: getRandomInt(1, 10),
+      rooms: getRandomInt(1, 5),
+      title: itemTitle[getRandomInt(0, itemTitle.length)],
+      type: itemType[getRandomInt(0, 2)],
+      checkin: timeCheck[getRandomInt(0, 2)],
+      checkout: timeCheck[getRandomInt(0, 2)],
+      features: typeFeatures.slice(0, getRandomInt(1, typeFeatures.length - 1)),
+      description: '',
+      photos: getRandomPhoto(),
+      xLocation: getRandomInt(0, containerWidth),
+      yLocation: getRandomInt(130, 630)
     };
+    card.location = card.xLocation + ', ' + card.yLocation;
+    return card;
   };
 
-  var generateMockData = function () {
-    generateAvatars();
-    for (var i = 0; i < 8; i++) {
-      offerInformation.push(getBooking());
-    }
-  };
-  generateMockData();
-
-  window.data = {
-    generateMockData: generateMockData,
-    getRandomItem: getRandomItem
-  };
+  window.getBooking = getBooking;
 })();
-
 
