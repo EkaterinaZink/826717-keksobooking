@@ -4,9 +4,10 @@
 
   var SUCCESS_STATUS = 200;
   var url = {
-    load: 'https://js.dump.academy/keksobooking/data',
-    save: 'https://js.dump.academy/keksobooking'
+    LOAD: 'https://js.dump.academy/keksobooking/data',
+    SAVE: 'https://js.dump.academy/keksobooking'
   };
+  var TIMEOUT_TIME = 10000;
   // функция запроса
   var getServerRequest = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
@@ -26,21 +27,21 @@
     xhr.addEventListener('timeout', function () {
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
-    xhr.timeout = 10000;
+    xhr.timeout = TIMEOUT_TIME;
     return xhr;
   };
 
   // загрузка данных с сервера
   var load = function (onLoad, onError) {
     var request = getServerRequest(onLoad, onError);
-    request.open('GET', url.load);
+    request.open('GET', url.LOAD);
     request.send();
   };
 
   // отправка данных на сервер
   var save = function (data, onLoad, onError) {
     var request = getServerRequest(onLoad, onError);
-    request.open('POST', url.save);
+    request.open('POST', url.SAVE);
     request.send(data);
   };
   window.backend = {

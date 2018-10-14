@@ -57,7 +57,7 @@
   };
 
 
-  var updateFilter = function (data) {
+  var update = function (data) {
     if (data.classList.contains('map__filter')) {
       var filterProperty = getPropertyFilter(data.name);
       filterChange[filterProperty] = data.value;
@@ -68,12 +68,12 @@
 
   var onFormChange = function (arr) {
     return function (data) {
-      updateFilter(data.target);
+      update(data.target);
       window.pins.updatePins(arr);
     };
   };
 
-  var enableFilters = function (arr) {
+  var enable = function (arr) {
     filtersElement.addEventListener('change', window.debounce(onFormChange(arr)));
   };
 
@@ -94,16 +94,16 @@
     return true;
   };
 
-  var checkFilter = function (param, fun, value) {
+  var check = function (param, fun, value) {
     return filterChange[param] === startFilter[param] ? true : fun(value, filterChange[param]);
   };
 
   var filteredCard = function (card) {
-    return checkFilter('type', filterByParam, card.offer.type)
-      && checkFilter('price', filterByPrice, card.offer.price)
-      && checkFilter('rooms', filterByParam, card.offer.rooms.toString())
-      && checkFilter('guests', filterByParam, card.offer.guests.toString())
-      && checkFilter('features', filterByFeatures, card.offer.features);
+    return check('type', filterByParam, card.offer.type)
+      && check('price', filterByPrice, card.offer.price)
+      && check('rooms', filterByParam, card.offer.rooms.toString())
+      && check('guests', filterByParam, card.offer.guests.toString())
+      && check('features', filterByFeatures, card.offer.features);
   };
 
   var filterArray = function (arr) {
@@ -115,20 +115,20 @@
     return arr;
   };
 
-  var reset = function (arr) {
+  var resetArr = function (arr) {
     arr.forEach(function (element) {
       element.value = startFilter[getPropertyFilter(element.name)];
     });
   };
 
-  var resetFilters = function () {
-    reset(filtersSelects);
+  var reset = function () {
+    resetArr(filtersSelects);
     window.utils.deleteCheckboxes(featuresFilter);
   };
 
   window.filters = {
-    enableFilters: enableFilters,
-    resetFilters: resetFilters,
+    enable: enable,
+    reset: reset,
     filterArray: filterArray
   };
 

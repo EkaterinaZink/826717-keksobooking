@@ -103,6 +103,18 @@
     return arr;
   };
 
+  var renderImage = function (value, photoParams) {
+    var image = document.createElement('img');
+    if (photoParams.CLASS_NAME) {
+      image.classList.add(photoParams.CLASS_NAME);
+    }
+    image.src = value;
+    image.width = photoParams.WIDTH;
+    image.height = photoParams.HEIGHT;
+    image.alt = photoParams.ALT_TEXT;
+    return image;
+  };
+
   window.utils = {
     shuffleArray: shuffleArray,
     getRandomValue: getRandomValue,
@@ -110,6 +122,7 @@
     isEvtEsc: isEvtEsc,
     isEvtEnter: isEvtEnter,
     renderMessageItem: renderMessageItem,
-    deleteCheckboxes: deleteCheckboxes
+    deleteCheckboxes: deleteCheckboxes,
+    renderImage: renderImage
   };
 })();

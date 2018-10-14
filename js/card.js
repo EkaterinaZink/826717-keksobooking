@@ -9,6 +9,14 @@
   };
   var popup;
   var cardClose;
+
+  var photoParams = {
+    WIDTH: 45,
+    HEIGHT: 40,
+    ALT_TEXT: 'Фотография жилья',
+    CLASS_NAME: 'popup__photo'
+  };
+
   var mapItem = document.querySelector('.map');
   var activePin = 'map__pin--active';
 
@@ -37,9 +45,7 @@
     timePopup.textContent = 'Заезд после ' + data.offer.checkin + ', выезд до ' + data.offer.checkout;
     descriptionPopup.textContent = data.offer.description;
     data.offer.photos.forEach(function (item) {
-      var photo = photosPopup.cloneNode(true);
-      photo.src = item;
-      cardTemplate.querySelector('.popup__photos').appendChild(photo);
+      photosPopup.appendChild(window.utils.renderPhoto(item, photoParams));
     });
     cardTemplate.querySelector('.popup__photos img:nth-child(1)').remove();
     var features = featuresPopup.cloneNode(true);

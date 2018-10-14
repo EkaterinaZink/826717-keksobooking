@@ -30,7 +30,7 @@
 
   var onLoad = function (data) {
     window.pins.updatePins(data);
-    window.filters.enableFilters(data);
+    window.filters.enable(data);
     showPins = true;
   };
 
@@ -52,7 +52,7 @@
       window.pins.deletePins();
       window.card.closeCard();
     }
-    window.filters.resetFilters();
+    window.filters.reset();
     window.mainPin.resetPin();
     pinAdress.value = window.mainPin.getPinLocation();
   };
