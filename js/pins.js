@@ -22,7 +22,7 @@
     return (pin);
   };
 
-  var renderMapPins = function (arr) {
+  var renderMapMarks = function (arr) {
     var fragment = document.createDocumentFragment();
     arr.forEach(function (item) {
       fragment.appendChild(renderPin(item));
@@ -30,7 +30,7 @@
     mapPins.appendChild(fragment);
   };
 
-  var deleteMapPins = function () {
+  var deleteMapMarks = function () {
     pins.forEach(function (item) {
       mapPins.removeChild(item);
     });
@@ -59,17 +59,17 @@
     };
   };
 
-  var updateMapPins = function (arr) {
-    var cards = window.filters.filterArray(arr);
-    deleteMapPins();
+  var updateMapMarks = function (arr) {
+    var cards = window.filters.filterRaw(arr);
+    deleteMapMarks();
     window.card.close();
     window.pins.render(cards);
   };
 
   window.pins = {
-    delete: deleteMapPins,
-    update: updateMapPins,
-    render: renderMapPins
+    delete: deleteMapMarks,
+    update: updateMapMarks,
+    render: renderMapMarks
   };
 })();
 

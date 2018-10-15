@@ -106,10 +106,10 @@
       && check('features', filterByFeatures, card.offer.features);
   };
 
-  var filterArray = function (arr) {
+  var filterRaw = function (arr) {
     arr = arr.filter(filteredCard);
     if (arr.length > NUMBER_CARD) {
-      window.utils.shuffleArray(arr);
+      window.utils.shuffle(arr);
       arr.splice(NUMBER_CARD, arr.length - NUMBER_CARD);
     }
     return arr;
@@ -129,7 +129,7 @@
   window.filters = {
     enable: enable,
     reset: reset,
-    filterArray: filterArray
+    filterRaw: filterRaw
   };
 
 })();

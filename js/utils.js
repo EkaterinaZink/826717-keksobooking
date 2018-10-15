@@ -93,7 +93,7 @@
     }
   };
 
-  var shuffleArray = function (arr) {
+  var shuffle = function (arr) {
     for (var i = arr.length - 1; i > 0; i--) {
       var random = getRandomValue(0, i);
       var temp = arr[i];
@@ -116,7 +116,7 @@
   };
 
   window.utils = {
-    shuffleArray: shuffleArray,
+    shuffle: shuffle,
     getRandomValue: getRandomValue,
     render: renderPhoto,
     isEvtEsc: isEvtEsc,

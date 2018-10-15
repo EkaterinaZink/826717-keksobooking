@@ -67,13 +67,13 @@
     mapItem.insertBefore(fragment, mapFiltersContainer);
   };
 
-  var renderPopup = function (card, data) {
-    closePopup();
+  var render = function (card, data) {
+    close();
     renderCardElement(card, data);
     data.classList.add(activePin);
   };
 
-  var closePopup = function () {
+  var close = function () {
     var pinActive = document.querySelector('.map__pin--active');
     if (popup) {
       mapItem.removeChild(popup);
@@ -88,24 +88,24 @@
 
   var onCardCloseClick = function () {
     return function () {
-      closePopup();
+      close();
     };
   };
 
   var onPressEsc = function (data) {
     return function (evt) {
-      window.utils.isEvtEsc(evt, closePopup, data);
+      window.utils.isEvtEsc(evt, close, data);
     };
   };
 
   var onPressEnter = function (data) {
     return function (evt) {
-      window.utils.isEvtEnter(evt, closePopup, data);
+      window.utils.isEvtEnter(evt, close, data);
     };
   };
 
   window.card = {
-    render: renderPopup,
-    close: closePopup
+    render: render,
+    close: close
   };
 })();
