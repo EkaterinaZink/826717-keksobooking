@@ -35,7 +35,7 @@
     var timePopup = cardTemplate.querySelector('.popup__text--time');
     var featuresPopup = cardTemplate.querySelector('.popup__features');
     var descriptionPopup = cardTemplate.querySelector('.popup__description');
-    var photosPopup = cardTemplate.querySelector('.popup__photos img');
+    var photosPopup = cardTemplate.querySelector('.popup__photos');
     avatarPopup.src = data.author.avatar;
     titlePopup.textContent = data.offer.title;
     addressPopup.textContent = data.offer.address;
@@ -45,7 +45,7 @@
     timePopup.textContent = 'Заезд после ' + data.offer.checkin + ', выезд до ' + data.offer.checkout;
     descriptionPopup.textContent = data.offer.description;
     data.offer.photos.forEach(function (item) {
-      photosPopup.appendChild(window.utils.renderPhoto(item, photoParams));
+      photosPopup.appendChild(window.utils.renderImage(item, photoParams));
     });
     cardTemplate.querySelector('.popup__photos img:nth-child(1)').remove();
     var features = featuresPopup.cloneNode(true);

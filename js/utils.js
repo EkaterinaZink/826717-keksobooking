@@ -118,7 +118,7 @@
   window.utils = {
     shuffleArray: shuffleArray,
     getRandomValue: getRandomValue,
-    renderPhoto: renderPhoto,
+    render: renderPhoto,
     isEvtEsc: isEvtEsc,
     isEvtEnter: isEvtEnter,
     renderMessageItem: renderMessageItem,
