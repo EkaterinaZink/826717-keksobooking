@@ -105,7 +105,7 @@
   };
 
   window.card = {
-    renderPopup: renderPopup,
-    closePopup: closePopup
+    render: renderPopup,
+    close: closePopup
   };
 })();

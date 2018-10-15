@@ -42,7 +42,7 @@
       pinActive.classList.remove(activePin);
     }
     var pinCurrent = data.classList.contains('map__pin') ? data : data.parentElement;
-    window.card.renderPopup(item, pinCurrent);
+    window.card.render(item, pinCurrent);
     pinCurrent.classList.add(activePin);
     pinActive = pinCurrent;
   };
@@ -62,14 +62,14 @@
   var updateMapPins = function (arr) {
     var cards = window.filters.filterArray(arr);
     deleteMapPins();
-    window.card.closePopup();
-    window.pins.renderMapPins(cards);
+    window.card.close();
+    window.pins.render(cards);
   };
 
   window.pins = {
-    deleteMapPins: deleteMapPins,
-    updateMapPins: updateMapPins,
-    renderMapPins: renderMapPins
+    delete: deleteMapPins,
+    update: updateMapPins,
+    render: renderMapPins
   };
 })();
 

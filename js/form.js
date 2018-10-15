@@ -28,7 +28,6 @@
   var imagesName = adForm.querySelector('[name=images]');
   var avatarElement = adForm.querySelector('.ad-form-header__preview img');
   var imagesContainer = adForm.querySelector('.ad-form__photo-container');
-  // var visibility = document.querySelector('.ad-form__input visually-hidden');
   var images = [];
 
   var initialFilter = {
@@ -147,16 +146,17 @@
     item.height = obj.HEIGHT;
   };
 
+  var photosContainer = adForm.querySelector('.ad-form__photo-container');
   var renderPhoto = function (item, value) {
     var preview = document.createElement('div');
     preview.classList.add(CONTAINER_CLASS);
-    preview.appendChild(window.utils.renderPhoto(value, photoParams));
+    preview.appendChild(window.utils.render(value, photoParams));
     images.push(preview);
     item.appendChild(preview);
+    photosContainer.style.display = 'none';
   };
 
   var readFile = function (file, data) {
-    // visibility.style.display = 'none';
     var fileName = file.name.toLowerCase();
     var matches = PHOTO_TYPES.some(function (item) {
       return fileName.endsWith(item);

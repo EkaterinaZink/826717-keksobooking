@@ -69,7 +69,7 @@
   var onFormChange = function (arr) {
     return function (data) {
       update(data.target);
-      window.pins.updateMapPins(arr);
+      window.pins.update(arr);
     };
   };
 
