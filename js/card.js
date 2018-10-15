@@ -45,7 +45,7 @@
     timePopup.textContent = 'Заезд после ' + data.offer.checkin + ', выезд до ' + data.offer.checkout;
     descriptionPopup.textContent = data.offer.description;
     data.offer.photos.forEach(function (item) {
-      photosPopup.appendChild(window.utils.renderImage(item, photoParams));
+      photosPopup.appendChild(window.utils.render(item, photoParams));
     });
     cardTemplate.querySelector('.popup__photos img:nth-child(1)').remove();
     var features = featuresPopup.cloneNode(true);

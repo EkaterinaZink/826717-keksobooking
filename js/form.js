@@ -146,7 +146,7 @@
     item.height = obj.HEIGHT;
   };
 
-  var photosContainer = adForm.querySelector('.ad-form__photo-container');
+  var photosContainer = adForm.querySelector('.ad-form__photo');
   var renderPhoto = function (item, value) {
     var preview = document.createElement('div');
     preview.classList.add(CONTAINER_CLASS);
