@@ -29,7 +29,7 @@
   };
 
   var onLoad = function (data) {
-    window.pins.updatePins(data);
+    window.pins.updateMapPins(data);
     window.filters.enable(data);
     showPins = true;
   };
@@ -49,8 +49,8 @@
     lockFields(mapFilter, adForm, 'ad-form--disabled');
     if (showPins) {
       showPins = false;
-      window.pins.deletePins();
-      window.card.closeCard();
+      window.pins.deleteMapPins();
+      window.card.closePopup();
     }
     window.filters.reset();
     window.mainPin.resetPin();

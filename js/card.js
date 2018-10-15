@@ -55,7 +55,7 @@
       featuresPopup.appendChild(featuresItem);
     });
     popup = cardTemplate;
-    cardClose.addEventListener('click', onCardCloseClick(data));
+    cardClose.addEventListener('click', onCardCloseClick());
     cardClose.addEventListener('keydown', onPressEnter(data));
     document.addEventListener('keydown', onPressEsc(data));
     return cardTemplate;
@@ -68,43 +68,44 @@
   };
 
   var renderPopup = function (card, data) {
-    closeCard(data);
+    closePopup();
     renderCardElement(card, data);
     data.classList.add(activePin);
   };
 
-  var closeCard = function (data) {
+  var closePopup = function () {
+    var pinActive = document.querySelector('.map__pin--active');
     if (popup) {
       mapItem.removeChild(popup);
       popup = null;
       cardClose = null;
       document.removeEventListener('keydown', onPressEsc);
     }
-    if (data) {
-      data.classList.remove(activePin);
+    if (pinActive) {
+      pinActive.classList.remove(activePin);
     }
   };
 
-  var onCardCloseClick = function (data) {
+  var onCardCloseClick = function () {
     return function () {
-      closeCard(data);
+      closePopup();
     };
   };
 
   var onPressEsc = function (data) {
     return function (evt) {
-      window.utils.isEvtEsc(evt, closeCard, data);
+      window.utils.isEvtEsc(evt, closePopup, data);
     };
   };
 
   var onPressEnter = function (data) {
     return function (evt) {
-      window.utils.isEvtEnter(evt, closeCard, data);
+      window.utils.isEvtEnter(evt, closePopup, data);
     };
   };
 
   window.card = {
     renderPopup: renderPopup,
-    closeCard: closeCard
+    closePopup: closePopup
   };
 })();

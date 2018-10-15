@@ -3,7 +3,7 @@
 (function () {
 
   var SUCCESS_STATUS = 200;
-  var url = {
+  var Url = {
     LOAD: 'https://js.dump.academy/keksobooking/data',
     SAVE: 'https://js.dump.academy/keksobooking'
   };
@@ -34,14 +34,14 @@
   // загрузка данных с сервера
   var load = function (onLoad, onError) {
     var request = getServerRequest(onLoad, onError);
-    request.open('GET', url.LOAD);
+    request.open('GET', Url.LOAD);
     request.send();
   };
 
   // отправка данных на сервер
   var save = function (data, onLoad, onError) {
     var request = getServerRequest(onLoad, onError);
-    request.open('POST', url.SAVE);
+    request.open('POST', Url.SAVE);
     request.send(data);
   };
   window.backend = {

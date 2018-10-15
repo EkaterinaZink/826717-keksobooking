@@ -28,6 +28,7 @@
   var imagesName = adForm.querySelector('[name=images]');
   var avatarElement = adForm.querySelector('.ad-form-header__preview img');
   var imagesContainer = adForm.querySelector('.ad-form__photo-container');
+  // var visibility = document.querySelector('.ad-form__input visually-hidden');
   var images = [];
 
   var initialFilter = {
@@ -51,7 +52,8 @@
   var photoParams = {
     WIDTH: 70,
     HEIGHT: 70,
-    ALT_TEXT: 'Фотография жилья'
+    ALT_TEXT: 'Фотография жилья',
+    CLASS_NAME: 'popup__photo'
   };
 
   var initialAvatar = {
@@ -130,8 +132,8 @@
 
   var onLoad = function () {
     clearAll();
-    window.map.unlockScreen();
     window.utils.renderMessageItem(mainItem, success);
+    window.map.lockScreen();
   };
 
   var onFormSend = function (evt) {
@@ -154,6 +156,7 @@
   };
 
   var readFile = function (file, data) {
+    // visibility.style.display = 'none';
     var fileName = file.name.toLowerCase();
     var matches = PHOTO_TYPES.some(function (item) {
       return fileName.endsWith(item);
